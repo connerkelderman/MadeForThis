@@ -4,7 +4,38 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Made For This Doula | Jordyn Kelderman | Minneapolis Birth & Postpartum Support</title>
-<meta name="description" content="Compassionate birth and postpartum doula support in the Minneapolis-St. Paul metro. Jordyn Kelderman walks beside you through pregnancy, birth, and beyond.">
+<meta name="description" content="Birth and postpartum doula in Minneapolis-St. Paul. Jordyn Kelderman provides compassionate, evidence-based support through pregnancy, labor, delivery, and the postpartum journey. Free consultations available.">
+<meta name="keywords" content="doula Minneapolis, birth doula St Paul, postpartum doula Twin Cities, Jordyn Kelderman, Made For This Doula, pregnancy support Minnesota, labor support Minneapolis">
+<meta property="og:title" content="Made For This Doula | Birth & Postpartum Support in Minneapolis">
+<meta property="og:description" content="Calm, compassionate doula care for growing families in the Twin Cities. Jordyn Kelderman offers birth and postpartum support packages starting at $40/hr.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.madeforthisdoula.com">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Made For This Doula | Jordyn Kelderman">
+<meta name="twitter:description" content="Birth and postpartum doula serving the Minneapolis-St. Paul metro. Free discovery calls available.">
+<meta name="theme-color" content="#8FA389">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "Made For This Doula",
+  "description": "Birth and postpartum doula services in the Minneapolis-St. Paul metro area",
+  "telephone": "+1-641-780-8719",
+  "email": "jordyn@madeforthisdoula.com",
+  "url": "https://www.madeforthisdoula.com",
+  "areaServed": {
+    "@type": "Place",
+    "name": "Minneapolis-St. Paul Metropolitan Area"
+  },
+  "priceRange": "$40-$1200",
+  "founder": {
+    "@type": "Person",
+    "name": "Jordyn Kelderman",
+    "jobTitle": "Certified Doula"
+  }
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet">
@@ -172,6 +203,8 @@ nav.scrolled {
 }
 .nav-links a:hover { color: var(--sage-deep); }
 .nav-links a:hover::after { width: 100%; }
+.nav-links a.active { color: var(--sage-deep); }
+.nav-links a.active::after { width: 100%; }
 .nav-cta {
   background: var(--charcoal) !important;
   color: var(--cream) !important;
@@ -1152,10 +1185,9 @@ nav.scrolled {
   margin-bottom: 3rem;
 }
 .contact-methods {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
-  justify-content: center;
-  flex-wrap: wrap;
   margin-bottom: 3rem;
 }
 .contact-method {
@@ -1168,8 +1200,6 @@ nav.scrolled {
   color: var(--charcoal);
   transition: all 0.5s cubic-bezier(0.23,1,0.32,1);
   border: 1px solid rgba(255,255,255,0.6);
-  min-width: 240px;
-  flex: 1;
 }
 .contact-method:hover {
   transform: translateY(-6px);
@@ -1334,9 +1364,44 @@ footer {
   .process-grid { grid-template-columns: 1fr; max-width: 500px; margin-left: auto; margin-right: auto; }
   .nav-links { display: none; }
   .hamburger { display: flex; }
-  .contact-methods { flex-direction: column; align-items: center; }
-  .contact-method { width: 100%; max-width: 340px; }
+  .contact-methods { grid-template-columns: 1fr; max-width: 340px; margin-left: auto; margin-right: auto; }
   .footer-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+}
+
+/* Back to top */
+.back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--white);
+  border: 1px solid var(--cream-deep);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.4s cubic-bezier(0.23,1,0.32,1);
+  z-index: 100;
+  box-shadow: 0 4px 20px rgba(46,42,39,0.08);
+}
+.back-to-top.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+.back-to-top:hover {
+  transform: translateY(-3px);
+  background: var(--sage-pale);
+  border-color: var(--sage-muted);
+  box-shadow: 0 8px 30px rgba(46,42,39,0.1);
+}
+.back-to-top svg {
+  width: 18px; height: 18px;
+  stroke: var(--charcoal-soft);
+  fill: none;
+  stroke-width: 2;
 }
 @media (max-width: 600px) {
   .hero { padding: 6rem 1.25rem 4rem; }
@@ -1392,7 +1457,7 @@ footer {
     <div class="hero-content">
       <p class="hero-eyebrow">Minneapolis &middot; St. Paul Doula</p>
       <h1 class="hero-title">You were<br><em>made</em> for this</h1>
-      <p class="hero-subtitle">Calm, compassionate birth and postpartum support for growing families in the Twin Cities. You don&rsquo;t have to walk this road alone.</p>
+      <p class="hero-subtitle">Compassionate birth and postpartum doula care for growing families in Minneapolis&ndash;St. Paul. From your first contraction to your first week home, you deserve someone in your corner.</p>
       <div class="hero-actions">
         <a href="#contact" class="btn-primary">
           <span>Free Consultation</span>
@@ -1423,21 +1488,21 @@ footer {
         <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"/></svg>
       </div>
       <div class="intro-stat-title">Heart-Centered</div>
-      <div class="intro-stat-desc">Every decision honored, every voice heard, every birth celebrated</div>
+      <div class="intro-stat-desc">Your birth vision honored, your voice heard, your choices respected &mdash; always</div>
     </div>
     <div class="intro-stat reveal reveal-delay-1">
       <div class="intro-stat-icon">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
       </div>
       <div class="intro-stat-title">24/7 On-Call</div>
-      <div class="intro-stat-desc">Available day and night from 38 weeks until your baby arrives</div>
+      <div class="intro-stat-desc">Reachable day or night from 38 weeks on, so you never wonder &ldquo;when do I call?&rdquo;</div>
     </div>
     <div class="intro-stat reveal reveal-delay-2">
       <div class="intro-stat-icon">
         <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
       </div>
       <div class="intro-stat-title">Evidence-Based</div>
-      <div class="intro-stat-desc">Informed support grounded in current research and best practices</div>
+      <div class="intro-stat-desc">Guidance grounded in current research, so you can make informed decisions with confidence</div>
     </div>
   </div>
 </section>
@@ -1458,8 +1523,8 @@ footer {
     <div class="about-content">
       <p class="section-eyebrow reveal">Meet Jordyn</p>
       <h2 class="section-title reveal reveal-delay-1">Birth work is<br>my <em>calling</em></h2>
-      <p class="about-text reveal reveal-delay-2">Hi, I&rsquo;m Jordyn&thinsp;&mdash;&thinsp;a certified doula serving families across the Minneapolis and St. Paul metro. I believe that every birthing person deserves to feel informed, supported, and genuinely empowered throughout their journey into parenthood.</p>
-      <p class="about-text reveal reveal-delay-2">My approach is rooted in deep listening and genuine presence. Whether you&rsquo;re planning a home birth, a hospital birth, or something in between, I&rsquo;m here to walk alongside you&thinsp;&mdash;&thinsp;never ahead of you. Your birth, your choices, your story.</p>
+      <p class="about-text reveal reveal-delay-2">Hi, I&rsquo;m Jordyn&thinsp;&mdash;&thinsp;a certified doula serving families across the Minneapolis&ndash;St. Paul metro. I got into this work because I believe something deeply: every birthing person deserves to feel safe, informed, and genuinely supported during one of the most transformative experiences of their life.</p>
+      <p class="about-text reveal reveal-delay-2">My approach is rooted in deep listening and unhurried presence. Whether you&rsquo;re planning a home birth, a hospital birth, a medicated birth, or something in between&thinsp;&mdash;&thinsp;I&rsquo;m here to walk alongside you, never ahead of you. I help you understand your options, advocate for your preferences, and find calm when things feel overwhelming. Your birth, your choices, your story. I&rsquo;m just honored to be part of it.</p>
       <div class="about-values reveal reveal-delay-3">
         <div class="about-value">
           <h4>Presence</h4>
@@ -1504,7 +1569,7 @@ footer {
       </div>
       <h3 class="service-name">Birth Doula</h3>
       <span class="service-tag">Full Support</span>
-      <p class="service-description">Continuous, hands-on support throughout your labor and delivery, plus dedicated prenatal and postpartum care.</p>
+      <p class="service-description">Your dedicated support person from pregnancy through delivery. I&rsquo;ll help you prepare, stay calm, and feel confident &mdash; no matter what direction your birth takes.</p>
       <ul class="service-includes">
         <li>Two prenatal visits (in-home or virtual)</li>
         <li>Personalized birth plan guidance</li>
@@ -1525,7 +1590,7 @@ footer {
       </div>
       <h3 class="service-name">Birth + Postpartum</h3>
       <span class="service-tag">Complete Care</span>
-      <p class="service-description">Everything in the Birth Doula package, plus extended postpartum support to ease your transition into life with baby.</p>
+      <p class="service-description">The full experience: everything in the Birth Doula package, plus extended in-home postpartum support so you&rsquo;re not left wondering &ldquo;now what?&rdquo; after baby arrives.</p>
       <ul class="service-includes">
         <li>Everything in Birth Doula package</li>
         <li>Three postpartum visits (in-home)</li>
@@ -1544,7 +1609,7 @@ footer {
       </div>
       <h3 class="service-name">Postpartum Doula</h3>
       <span class="service-tag">Flexible Hours</span>
-      <p class="service-description">Dedicated in-home support during the weeks after birth. Rest, recover, and adjust while I help care for you and your baby.</p>
+      <p class="service-description">Already have your birth plan covered? This is flexible, in-home support for the weeks after delivery &mdash; so you can actually rest, heal, and enjoy your baby.</p>
       <ul class="service-includes">
         <li>Daytime in-home support visits</li>
         <li>Newborn care &amp; soothing techniques</li>
@@ -1570,22 +1635,22 @@ footer {
     <div class="process-card reveal">
       <div class="process-number">01</div>
       <h3>Free Discovery Call</h3>
-      <p>A relaxed 20&ndash;30 minute conversation to get to know each other, talk about your birth vision, and see if we&rsquo;re a good fit. No pressure, no commitment.</p>
+      <p>A relaxed 20&ndash;30 minute phone call where we get to know each other. I&rsquo;ll ask about your hopes for birth, you can ask me anything, and we&rsquo;ll both know pretty quickly if it&rsquo;s a good fit. Zero pressure.</p>
     </div>
     <div class="process-card reveal reveal-delay-1">
       <div class="process-number">02</div>
       <h3>Prenatal Visits</h3>
-      <p>We&rsquo;ll meet to dive deep into your birth preferences, practice comfort techniques, and build a plan that reflects exactly what you want. Partners always welcome.</p>
+      <p>We meet one-on-one to talk through your birth preferences, practice comfort measures like breathing and positioning, and create a plan that actually reflects what matters to you. Your partner is always welcome.</p>
     </div>
     <div class="process-card reveal reveal-delay-2">
       <div class="process-number">03</div>
       <h3>On-Call &amp; Labor</h3>
-      <p>Starting at 38 weeks, I&rsquo;m on call around the clock. When labor begins, I&rsquo;ll join you at your chosen birth location and stay by your side through delivery.</p>
+      <p>Starting at 38 weeks, I&rsquo;m a phone call away &mdash; day or night. When labor begins, I come to you. I stay by your side through every contraction, shift change, and decision point until your baby is here.</p>
     </div>
     <div class="process-card reveal reveal-delay-3">
       <div class="process-number">04</div>
       <h3>Postpartum Care</h3>
-      <p>After baby arrives, I&rsquo;ll visit you at home to check in on recovery, help with early feeding, answer questions, and make sure you feel supported.</p>
+      <p>Within the first week or two, I&rsquo;ll visit you at home to check in on how you&rsquo;re really doing &mdash; physically and emotionally. We&rsquo;ll talk through feeding, sleep, recovery, and anything else on your mind.</p>
     </div>
   </div>
 </section>
@@ -1621,9 +1686,9 @@ footer {
     </div>
     <div class="trust-quote-box reveal reveal-delay-1">
       <div class="trust-quote-mark">&ldquo;</div>
-      <p class="trust-quote-text">Every family I work with teaches me something new. It&rsquo;s the most humbling, beautiful work I could imagine &mdash; and I feel so grateful to do it.</p>
-      <p class="trust-quote-author">&mdash; Jordyn Kelderman</p>
-      <p class="trust-quote-note">Client testimonials coming soon as I grow my practice!</p>
+      <p class="trust-quote-text">I started this work because I saw too many people go through birth feeling alone, unheard, or overwhelmed. Every family I walk alongside reminds me why this matters &mdash; and why I&rsquo;ll never stop showing up.</p>
+      <p class="trust-quote-author">&mdash; Jordyn Kelderman, Certified Doula</p>
+      <p class="trust-quote-note">Client testimonials coming soon &mdash; I&rsquo;d love for yours to be one of the first.</p>
     </div>
   </div>
 </section>
@@ -1686,7 +1751,25 @@ footer {
         <span class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
       </button>
       <div class="faq-answer">
-        <p>I serve families throughout the Minneapolis&ndash;St. Paul metro area including surrounding suburbs. If you&rsquo;re a bit further out, let&rsquo;s chat&thinsp;&mdash;&thinsp;I&rsquo;m often willing to travel for the right fit. Virtual prenatal and postpartum visits are also available for added flexibility.</p>
+        <p>I serve families throughout the Minneapolis&ndash;St. Paul metro area including surrounding suburbs like Bloomington, Edina, Maple Grove, Woodbury, Eagan, and beyond. If you&rsquo;re a bit further out, let&rsquo;s chat&thinsp;&mdash;&thinsp;I&rsquo;m often willing to travel. Virtual prenatal and postpartum visits are also available.</p>
+      </div>
+    </div>
+    <div class="faq-item reveal">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        Can I use insurance or an HSA/FSA to pay?
+        <span class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+      </button>
+      <div class="faq-answer">
+        <p>Some insurance plans and many HSA/FSA accounts do cover doula services. I can provide a superbill (a detailed receipt) that you can submit to your insurance for potential reimbursement. I recommend calling your provider to ask about your specific coverage before we get started.</p>
+      </div>
+    </div>
+    <div class="faq-item reveal">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        What if my labor happens really fast &mdash; or really slow?
+        <span class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+      </button>
+      <div class="faq-answer">
+        <p>I&rsquo;m prepared for both! Fast labors are one of the biggest reasons to have a doula &mdash; I can be a calm, familiar presence when everything is moving quickly. And for longer labors, I&rsquo;m there for the long haul with no time limit. My fee covers your entire labor, whether it&rsquo;s 4 hours or 24+.</p>
       </div>
     </div>
   </div>
@@ -1702,7 +1785,7 @@ footer {
   <div class="contact-content">
     <p class="section-eyebrow reveal">Let&rsquo;s Connect</p>
     <h2 class="section-title reveal reveal-delay-1">Ready to feel <em>supported?</em></h2>
-    <p class="contact-subtitle reveal reveal-delay-2">I&rsquo;d love to hear your story. Reach out for a free, no-pressure discovery call and let&rsquo;s talk about what support could look like for you and your family.</p>
+    <p class="contact-subtitle reveal reveal-delay-2">Whether you&rsquo;re 8 weeks along or 38, it&rsquo;s never too early (or too late) to reach out. Let&rsquo;s start with a free, no-pressure phone call and see how I can support you.</p>
     <div class="contact-methods reveal reveal-delay-3">
       <a href="tel:6417808719" class="contact-method">
         <div class="contact-method-icon">
@@ -1718,10 +1801,22 @@ footer {
         <p class="contact-method-label">Email</p>
         <p class="contact-method-value">jordyn@madeforthisdoula.com</p>
       </a>
+      <a href="https://www.instagram.com/madeforthisdoula" target="_blank" rel="noopener" class="contact-method">
+        <div class="contact-method-icon">
+          <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        </div>
+        <p class="contact-method-label">Follow Along</p>
+        <p class="contact-method-value">@madeforthisdoula</p>
+      </a>
     </div>
-    <p class="contact-note reveal reveal-delay-4"><strong>Free consultations</strong> available evenings &amp; weekends &middot; Serving the entire Twin Cities metro</p>
+    <p class="contact-note reveal reveal-delay-4"><strong>Free 30-minute consultations</strong> available evenings &amp; weekends &middot; Serving Minneapolis, St. Paul &amp; surrounding suburbs</p>
   </div>
 </section>
+
+<!-- BACK TO TOP -->
+<button class="back-to-top" id="backToTop" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+</button>
 
 <!-- FOOTER -->
 <footer>
@@ -1744,6 +1839,7 @@ footer {
       <h4>Get in Touch</h4>
       <a href="tel:6417808719">(641) 780-8719</a>
       <a href="mailto:jordyn@madeforthisdoula.com">jordyn@madeforthisdoula.com</a>
+      <a href="https://www.instagram.com/madeforthisdoula" target="_blank" rel="noopener">@madeforthisdoula</a>
       <a href="#contact">Book a Free Call</a>
     </div>
   </div>
@@ -1768,12 +1864,33 @@ const observer = new IntersectionObserver((entries) => {
 }, { threshold: 0.12, rootMargin: '0px 0px -50px 0px' });
 reveals.forEach(el => observer.observe(el));
 
-// Nav scroll
+// Nav scroll + active link highlighting + back-to-top
 const navbar = document.getElementById('navbar');
-let lastScroll = 0;
+const backToTop = document.getElementById('backToTop');
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-links a:not(.nav-cta)');
+
+function updateActiveNav() {
+  const scrollPos = window.scrollY + 150;
+  sections.forEach(section => {
+    const top = section.offsetTop;
+    const height = section.offsetHeight;
+    const id = section.getAttribute('id');
+    if (scrollPos >= top && scrollPos < top + height) {
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + id) {
+          link.classList.add('active');
+        }
+      });
+    }
+  });
+}
+
 window.addEventListener('scroll', () => {
   navbar.classList.toggle('scrolled', window.scrollY > 80);
-  lastScroll = window.scrollY;
+  backToTop.classList.toggle('visible', window.scrollY > 600);
+  updateActiveNav();
 });
 
 // Mobile menu
@@ -1789,35 +1906,78 @@ function closeMobile() {
   mobileMenu.classList.remove('active');
   document.body.style.overflow = '';
 }
+// Close mobile menu on Escape key
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && mobileMenu.classList.contains('active')) {
+    closeMobile();
+  }
+});
 
-// FAQ
+// FAQ with keyboard accessibility
 function toggleFaq(btn) {
   const item = btn.parentElement;
   const wasActive = item.classList.contains('active');
-  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
-  if (!wasActive) item.classList.add('active');
+  const answer = item.querySelector('.faq-answer');
+  document.querySelectorAll('.faq-item').forEach(i => {
+    i.classList.remove('active');
+    i.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+  });
+  if (!wasActive) {
+    item.classList.add('active');
+    btn.setAttribute('aria-expanded', 'true');
+  }
 }
+// Set up FAQ ARIA attributes
+document.querySelectorAll('.faq-question').forEach((btn, i) => {
+  btn.setAttribute('aria-expanded', 'false');
+  btn.setAttribute('aria-controls', 'faq-answer-' + i);
+  const answer = btn.nextElementSibling;
+  if (answer) answer.id = 'faq-answer-' + i;
+});
 
-// Smooth scroll
+// Smooth scroll with nav offset
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   anchor.addEventListener('click', function(e) {
     e.preventDefault();
-    const target = document.querySelector(this.getAttribute('href'));
+    const href = this.getAttribute('href');
+    if (href === '#') return;
+    const target = document.querySelector(href);
     if (target) {
-      const offset = 80;
+      const offset = 90;
       const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
       window.scrollTo({ top, behavior: 'smooth' });
     }
   });
 });
 
-// Parallax effect on hero blobs
-window.addEventListener('scroll', () => {
-  const scrolled = window.pageYOffset;
-  const blobs = document.querySelectorAll('.hero-blob');
-  blobs.forEach((blob, i) => {
-    const speed = (i + 1) * 0.03;
-    blob.style.transform = `translateY(${scrolled * speed}px)`;
+// Parallax effect on hero blobs (only on non-touch for performance)
+const isTouch = 'ontouchstart' in window;
+if (!isTouch) {
+  window.addEventListener('scroll', () => {
+    const scrolled = window.pageYOffset;
+    if (scrolled < window.innerHeight * 1.5) {
+      const blobs = document.querySelectorAll('.hero-blob');
+      blobs.forEach((blob, i) => {
+        const speed = (i + 1) * 0.03;
+        blob.style.transform = `translateY(${scrolled * speed}px)`;
+      });
+    }
+  });
+}
+
+// Phone number click tracking (for analytics later)
+document.querySelectorAll('a[href^="tel:"]').forEach(link => {
+  link.addEventListener('click', () => {
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'click', { event_category: 'contact', event_label: 'phone_call' });
+    }
+  });
+});
+document.querySelectorAll('a[href^="mailto:"]').forEach(link => {
+  link.addEventListener('click', () => {
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'click', { event_category: 'contact', event_label: 'email' });
+    }
   });
 });
 </script>

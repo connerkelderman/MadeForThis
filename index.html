@@ -79,7 +79,7 @@ gtag('config', 'G-KX3MCQC4SF');
   --font-body: 'DM Sans', system-ui, sans-serif;
 }
 
-html { scroll-behavior: smooth; font-size: 16px; scroll-padding-top: 100px; }
+html { scroll-behavior: smooth; font-size: 16px; scroll-padding-top: 120px; }
 * { -webkit-tap-highlight-color: transparent; }
 
 body {
@@ -2699,6 +2699,7 @@ function handleGuideDownload(e) {
   var phoneInput = document.getElementById('form-phone');
   if (phoneInput) {
     phoneInput.addEventListener('input', function(e) {
+      if (e.inputType === 'deleteContentBackward' || e.inputType === 'deleteContentForward') return;
       var digits = this.value.replace(/\D/g, '').substring(0, 10);
       var formatted = '';
       if (digits.length > 0) formatted = '(' + digits.substring(0, 3);

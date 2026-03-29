@@ -2079,7 +2079,7 @@ footer {
     </div>
     <div class="lead-magnet-success" id="guide-success">
       <h3>You&rsquo;re all set!</h3>
-      <p>Your Birth Plan Guide is downloading now. I can&rsquo;t wait to walk through it with you.</p>
+      <p>Your Birth Plan Guide is downloading now. Check your inbox for a note from me, too. I can&rsquo;t wait to walk through it with you!</p>
     </div>
   </div>
 </section>
@@ -2559,10 +2559,11 @@ function handleGuideDownload(e) {
   var firstName = form.querySelector('input[name="guide_first"]').value;
   var lastName = form.querySelector('input[name="guide_last"]').value;
   var email = form.querySelector('input[name="guide_email"]').value;
+  var autoMessage = 'Hi ' + firstName + '!\n\nThank you so much for downloading the Made For This | Birth Plan Guide! I hope it helps you feel more prepared and confident as you think through your preferences for the big day.\n\nYour guide should have downloaded automatically. If for any reason it didn\'t, just reply to this email and I\'ll send it right over.\n\nIf you have any questions as you work through it, or if you\'d like to chat about how doula support could look for you, I\'d love to connect! You can use our contact form to request a call:\n\nhttps://www.madeforthisdoula.com/#contact-form\n\nYou were made for this.\n\nWarmly,\nJordyn Kelderman\nMade For This Doula\n(641) 780-8719\njordyn@madeforthisdoula.com';
   fetch('https://formsubmit.co/ajax/jordyn@madeforthisdoula.com', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-    body: JSON.stringify({ first_name: firstName, last_name: lastName, email: email, _subject: 'New Birth Plan Guide download from ' + firstName + ' ' + lastName, _template: 'table' })
+    body: JSON.stringify({ first_name: firstName, last_name: lastName, email: email, _subject: 'New Birth Plan Guide download from ' + firstName + ' ' + lastName, _template: 'table', _autoresponse: autoMessage, _replyto: 'jordyn@madeforthisdoula.com' })
   }).catch(function() {});
   var link = document.createElement('a');
   link.href = 'data:application/pdf;base64,' + guidePdfData;

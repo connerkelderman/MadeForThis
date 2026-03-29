@@ -11,6 +11,7 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://www.madeforthisdoula.com">
 <meta property="og:locale" content="en_US">
+<link rel="canonical" href="https://www.madeforthisdoula.com">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Made For This Doula | Jordyn Kelderman">
 <meta name="twitter:description" content="Birth and postpartum doula serving the Minneapolis-St. Paul metro. Free discovery calls available.">
@@ -22,7 +23,7 @@
 <meta name="twitter:image" content="https://www.madeforthisdoula.com/images/og-share.jpg">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%238FA389'/%3E%3Ctext x='50' y='62' text-anchor='middle' font-family='Georgia,serif' font-size='36' font-style='italic' fill='%23FAF7F2'%3Emft%3C/text%3E%3C/svg%3E">
 <link rel="icon" type="image/png" sizes="32x32" href="https://www.madeforthisdoula.com/favicon-32x32.png">
-<!-- Google Analytics (GA4) – Replace G-XXXXXXXXXX with your Measurement ID -->
+<!-- Google Analytics (GA4) – Uncomment and replace G-XXXXXXXXXX with your Measurement ID when ready
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
 <script>
 window.dataLayer = window.dataLayer || [];
@@ -30,6 +31,7 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-XXXXXXXXXX');
 </script>
+-->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -1293,7 +1295,7 @@ nav.scrolled {
   border-bottom: 1px solid var(--cream-deep);
   overflow: hidden;
 }
-.faq-item:first-child {
+.faq-item:nth-child(-n+2) {
   border-top: 1px solid var(--cream-deep);
 }
 .faq-question {
@@ -1343,7 +1345,7 @@ nav.scrolled {
   transition: max-height 0.6s cubic-bezier(0.23,1,0.32,1), padding 0.4s ease;
 }
 .faq-item.active .faq-answer {
-  max-height: 400px;
+  max-height: 600px;
   padding-bottom: 1.5rem;
 }
 .faq-answer p {
@@ -1352,6 +1354,9 @@ nav.scrolled {
   line-height: 1.85;
   font-weight: 300;
   padding-right: 2rem;
+}
+.faq-answer p + p {
+  margin-top: 0.85rem;
 }
 
 /* === CONTACT === */
@@ -1808,6 +1813,8 @@ footer {
   <a href="#contact-form" onclick="closeMobile()">Get in Touch</a>
 </div>
 
+<main>
+
 <!-- HERO -->
 <section class="hero">
   <div class="hero-bg">
@@ -1998,7 +2005,7 @@ footer {
     <div class="process-card reveal">
       <div class="process-number">01</div>
       <h3>Free Discovery Call</h3>
-      <p>A relaxed 20&ndash;30 minute phone call where we get to know each other. I&rsquo;ll ask about your hopes for birth, you can ask me anything, and we&rsquo;ll both know pretty quickly if it&rsquo;s a good fit. Zero pressure.</p>
+      <p>A relaxed 30-minute phone call where we get to know each other. I&rsquo;ll ask about your hopes for birth, you can ask me anything, and we&rsquo;ll both know pretty quickly if it&rsquo;s a good fit. Zero pressure.</p>
     </div>
     <div class="process-card reveal reveal-delay-1">
       <div class="process-number">02</div>
@@ -2086,11 +2093,12 @@ footer {
   <div class="faq-list">
     <div class="faq-item reveal">
       <button class="faq-question" onclick="toggleFaq(this)">
-        What exactly does a doula do?
+        What does a doula do, and not do?
         <span class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
       </button>
       <div class="faq-answer">
         <p>A doula provides continuous physical, emotional, and informational support before, during, and after birth. I&rsquo;m not a medical provider, I&rsquo;m your dedicated support person. Think of me as your calm, knowledgeable companion who helps you feel confident and cared for. I offer comfort techniques, help you understand your options, and support your partner too.</p>
+        <p>A doula is not a medical professional and does not perform clinical tasks. I don&rsquo;t check blood pressure, monitor the baby&rsquo;s heart rate, perform cervical checks, deliver babies, or make medical decisions on your behalf. I also don&rsquo;t speak to your care team for you, instead, I help you feel informed and confident so you can advocate for yourself. Think of me as your support person, not a replacement for your doctor or midwife.</p>
       </div>
     </div>
     <div class="faq-item reveal">
@@ -2104,11 +2112,12 @@ footer {
     </div>
     <div class="faq-item reveal">
       <button class="faq-question" onclick="toggleFaq(this)">
-        Do you only support unmedicated births?
+        Do you only support unmedicated births? What about epidurals?
         <span class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
       </button>
       <div class="faq-answer">
         <p>Not at all. I support you in whatever birth feels right for you, whether that&rsquo;s unmedicated, with an epidural, or a planned cesarean. There is no one &ldquo;right&rdquo; way to give birth. My job is to make sure you feel informed about your choices and supported no matter what path your birth takes.</p>
+        <p>Absolutely! Having an epidural doesn&rsquo;t mean you don&rsquo;t need support, it actually changes the kind of support that&rsquo;s most helpful. I can assist with positioning to help labor progress, keep you comfortable and calm, provide emotional reassurance, help with pushing techniques, and support your partner through the process. Many of my clients plan for epidurals, and I&rsquo;m fully there for them every step of the way.</p>
       </div>
     </div>
     <div class="faq-item reveal">
@@ -2122,19 +2131,11 @@ footer {
     </div>
     <div class="faq-item reveal">
       <button class="faq-question" onclick="toggleFaq(this)">
-        Do you offer payment plans?
+        Do you offer payment plans? Can I use insurance or HSA/FSA?
         <span class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
       </button>
       <div class="faq-answer">
-        <p>Yes! I understand that growing a family comes with a lot of expenses. I offer flexible payment plans and am happy to work with you to find an arrangement that fits your budget. Doula care should be accessible, and I never want cost to be the reason someone goes without support.</p>
-      </div>
-    </div>
-    <div class="faq-item reveal">
-      <button class="faq-question" onclick="toggleFaq(this)">
-        Can I use insurance or an HSA/FSA to pay?
-        <span class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
-      </button>
-      <div class="faq-answer">
+        <p>Yes! I understand that growing a family comes with a lot of expenses. I believe doula care should be accessible and I never want cost to be the reason someone goes without support. I&rsquo;d be happy to chat about flexible terms if this is a factor.</p>
         <p>Some insurance plans and many HSA/FSA accounts do cover doula services. I can provide a superbill (a detailed receipt) that you can submit to your insurance for potential reimbursement. I recommend calling your provider to ask about your specific coverage before we get started.</p>
       </div>
     </div>
@@ -2154,33 +2155,7 @@ footer {
       </button>
       <div class="faq-answer">
         <p>A doula brings continuous emotional, physical, and informational support throughout your pregnancy, labor, and postpartum period. Research shows that having a doula can lead to shorter labors, fewer interventions, higher satisfaction with the birth experience, and better emotional well-being for both the birthing person and their partner. Beyond the stats, a doula gives you someone fully focused on you, not charting, not switching shifts, just present.</p>
-      </div>
-    </div>
-    <div class="faq-item reveal">
-      <button class="faq-question" onclick="toggleFaq(this)">
-        What birth outcomes are better with doulas present?
-        <span class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
-      </button>
-      <div class="faq-answer">
         <p>Studies consistently show that continuous doula support is associated with lower cesarean rates, reduced use of pain medication, shorter labor duration, fewer instrumental deliveries (like vacuum or forceps), and higher Apgar scores for newborns. Families who use doulas also report feeling more positive about their birth experience overall and more confident in their early parenting.</p>
-      </div>
-    </div>
-    <div class="faq-item reveal">
-      <button class="faq-question" onclick="toggleFaq(this)">
-        What services does a doula NOT provide?
-        <span class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
-      </button>
-      <div class="faq-answer">
-        <p>A doula is not a medical professional and does not perform clinical tasks. I don&rsquo;t check blood pressure, monitor the baby&rsquo;s heart rate, perform cervical checks, deliver babies, or make medical decisions on your behalf. I also don&rsquo;t speak to your care team for you, instead, I help you feel informed and confident so you can advocate for yourself. Think of me as your support person, not a replacement for your doctor or midwife.</p>
-      </div>
-    </div>
-    <div class="faq-item reveal">
-      <button class="faq-question" onclick="toggleFaq(this)">
-        Can a doula help if I get an epidural?
-        <span class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
-      </button>
-      <div class="faq-answer">
-        <p>Absolutely! Having an epidural doesn&rsquo;t mean you don&rsquo;t need support, it actually changes the kind of support that&rsquo;s most helpful. I can assist with positioning to help labor progress, keep you comfortable and calm, provide emotional reassurance, help with pushing techniques, and support your partner through the process. Many of my clients plan for epidurals, and I&rsquo;m fully there for them every step of the way.</p>
       </div>
     </div>
     <div class="faq-item reveal">
@@ -2304,6 +2279,8 @@ footer {
 <button class="back-to-top" id="backToTop" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
   <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
 </button>
+
+</main>
 
 <!-- FOOTER -->
 <footer>

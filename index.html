@@ -1100,6 +1100,71 @@ nav.scrolled {
   font-style: italic;
 }
 
+/* === GUIDE BANNER === */
+.guide-banner {
+  background: var(--sage);
+  padding: 1.5rem 2rem;
+}
+.guide-banner-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  text-align: center;
+}
+.guide-banner-icon {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+}
+.guide-banner-icon svg {
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: var(--cream);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.guide-banner-text {
+  color: var(--cream);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 300;
+  margin: 0;
+  line-height: 1.5;
+}
+.guide-banner-text strong {
+  font-weight: 500;
+}
+.guide-banner-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--cream);
+  color: var(--sage);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0.5rem 1.2rem;
+  border-radius: 50px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.3s, transform 0.2s;
+  flex-shrink: 0;
+}
+.guide-banner-btn:hover {
+  background: #fff;
+  transform: translateY(-1px);
+}
+@media (max-width: 600px) {
+  .guide-banner { padding: 1.25rem 1.5rem; }
+  .guide-banner-icon { display: none; }
+}
+
 /* === LEAD MAGNET / BIRTH PLAN GUIDE === */
 .lead-magnet {
   padding: 5rem 2rem;
@@ -1873,6 +1938,20 @@ footer {
   </div>
 </section>
 
+<!-- GUIDE BANNER -->
+<section class="guide-banner">
+  <div class="guide-banner-inner reveal">
+    <div class="guide-banner-icon">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 18 15 15"/></svg>
+    </div>
+    <p class="guide-banner-text">Grab your <strong>free Birth Plan Guide</strong> to start brainstorming your birth plan.</p>
+    <a href="#birth-plan-guide" class="guide-banner-btn">
+      <span>Get the Free Guide</span>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+</section>
+
 <!-- ABOUT -->
 <section class="about" id="about">
   <div class="about-grid">
@@ -2564,7 +2643,13 @@ function handleGuideDownload(e) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
     body: JSON.stringify({ first_name: firstName, last_name: lastName, email: email, _subject: 'New Birth Plan Guide download from ' + firstName + ' ' + lastName, _template: 'table', _autoresponse: autoMessage, _replyto: 'jordyn@madeforthisdoula.com' })
-  }).catch(function() {});
+  }).then(function(response) {
+    return response.json();
+  }).then(function(data) {
+    console.log('FormSubmit response:', data);
+  }).catch(function(err) {
+    console.error('FormSubmit error:', err);
+  });
   var link = document.createElement('a');
   link.href = 'data:application/pdf;base64,' + guidePdfData;
   link.download = 'Made_For_This_Birth_Plan_Guide.pdf';

@@ -1144,13 +1144,13 @@ nav.scrolled {
 .lead-magnet-form {
   display: flex;
   gap: 0.75rem;
-  max-width: 520px;
+  max-width: 620px;
   margin: 0 auto;
   flex-wrap: wrap;
   justify-content: center;
 }
 .lead-magnet-form input {
-  flex: 1; min-width: 180px;
+  flex: 1; min-width: 140px;
   padding: 0.9rem 1.25rem;
   border: 1.5px solid var(--sage-muted);
   border-radius: 12px;
@@ -1201,6 +1201,76 @@ nav.scrolled {
 }
 .lead-magnet-success h3 { font-family: var(--font-display); font-size: 1.4rem; color: var(--charcoal); margin-bottom: 0.5rem; }
 .lead-magnet-success p { font-size: 0.9rem; color: var(--warm-gray); font-weight: 300; }
+
+/* === LEGAL MODALS === */
+.legal-modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(46,42,39,0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 10000;
+  overflow-y: auto;
+  padding: 3rem 1.5rem;
+}
+.legal-modal-overlay.active { display: flex; justify-content: center; align-items: flex-start; }
+.legal-modal {
+  background: var(--white);
+  border-radius: 24px;
+  max-width: 720px;
+  width: 100%;
+  padding: 3rem;
+  position: relative;
+  box-shadow: 0 30px 80px rgba(46,42,39,0.2);
+}
+.legal-modal-close {
+  position: absolute;
+  top: 1.25rem; right: 1.25rem;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: var(--cream);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease;
+}
+.legal-modal-close:hover { background: var(--sage-muted); }
+.legal-modal-close svg { width: 18px; height: 18px; stroke: var(--charcoal); fill: none; stroke-width: 2; }
+.legal-modal h2 {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 400;
+  color: var(--charcoal);
+  margin-bottom: 0.5rem;
+}
+.legal-modal .legal-date { font-size: 0.8rem; color: var(--warm-gray-light); margin-bottom: 2rem; display: block; }
+.legal-modal h3 {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: var(--charcoal);
+  margin: 1.75rem 0 0.5rem;
+}
+.legal-modal p, .legal-modal ul {
+  font-size: 0.88rem;
+  color: var(--warm-gray);
+  line-height: 1.8;
+  font-weight: 300;
+  margin-bottom: 0.75rem;
+}
+.legal-modal ul { padding-left: 1.5rem; }
+.legal-modal li { margin-bottom: 0.4rem; }
+.footer-legal { display: flex; gap: 1.5rem; justify-content: center; margin-top: 0.75rem; }
+.footer-legal a {
+  font-size: 0.75rem;
+  color: var(--warm-gray-light);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+.footer-legal a:hover { color: var(--sage-deep); }
 
 /* === FAQ === */
 .faq {
@@ -1990,8 +2060,9 @@ footer {
     <p class="lead-magnet-desc">A beautifully designed, DONA-inspired worksheet to help you think through your preferences and feel prepared for the big day. Enter your info and it&rsquo;s yours.</p>
     <div id="lead-magnet-form-wrap">
       <form class="lead-magnet-form" id="guide-form" onsubmit="return handleGuideDownload(event)">
-        <input type="text" name="guide_name" placeholder="Your first name" required>
-        <input type="email" name="guide_email" placeholder="Email address" required>
+        <input type="text" name="guide_first" placeholder="First name" required autocomplete="given-name">
+        <input type="text" name="guide_last" placeholder="Last name" required autocomplete="family-name">
+        <input type="email" name="guide_email" placeholder="Email address" required autocomplete="email">
         <button type="submit">
           <span>Download Guide</span>
           <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
@@ -2150,17 +2221,17 @@ footer {
         <div class="form-row">
           <div class="form-group">
             <label for="form-name">Your Name</label>
-            <input type="text" id="form-name" name="name" placeholder="First &amp; last name" required aria-required="true">
+            <input type="text" id="form-name" name="name" placeholder="First &amp; last name" required aria-required="true" autocomplete="name">
           </div>
           <div class="form-group">
             <label for="form-email">Email Address</label>
-            <input type="email" id="form-email" name="email" placeholder="you@email.com" required aria-required="true">
+            <input type="email" id="form-email" name="email" placeholder="you@email.com" required aria-required="true" autocomplete="email">
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
             <label for="form-phone">Phone Number</label>
-            <input type="tel" id="form-phone" name="phone" placeholder="(___) ___-____">
+            <input type="tel" id="form-phone" name="phone" placeholder="(612) 555-1234" autocomplete="tel">
           </div>
           <div class="form-group">
             <label for="form-service">Service Interested In</label>
@@ -2261,12 +2332,106 @@ footer {
   </div>
   <div class="footer-bottom">
     <p class="footer-copyright">&copy; <span id="copyright-year">2026</span> Made For This Doula &middot; All rights reserved</p>
+    <div class="footer-legal">
+      <a href="#" onclick="openLegalModal('privacy'); return false;">Privacy Policy</a>
+      <a href="#" onclick="openLegalModal('terms'); return false;">Terms of Service</a>
+    </div>
     <p class="footer-location">
       <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
       Minneapolis&ndash;St. Paul, Minnesota
     </p>
   </div>
 </footer>
+
+<!-- LEGAL MODALS -->
+<div class="legal-modal-overlay" id="privacy-modal" onclick="if(event.target===this)closeLegalModal('privacy')">
+  <div class="legal-modal">
+    <button class="legal-modal-close" onclick="closeLegalModal('privacy')" aria-label="Close">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <h2>Privacy Policy</h2>
+    <span class="legal-date">Effective January 1, 2026</span>
+
+    <h3>Introduction</h3>
+    <p>Made For This Doula (&ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;) is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your personal information when you visit our website, madeforthisdoula.com, or engage our doula services.</p>
+
+    <h3>Information We Collect</h3>
+    <p>We may collect the following types of information:</p>
+    <ul>
+      <li><strong>Contact information</strong> you provide voluntarily, such as your name, email address, phone number, due date, and any message you include, when you submit our contact form, request a consultation, or download resources.</li>
+      <li><strong>Health-related information</strong> you share during consultations or as part of your doula care, including pregnancy details and birth preferences.</li>
+      <li><strong>Usage data</strong> collected automatically, such as your IP address, browser type, pages visited, and referring website, through cookies or similar technologies.</li>
+    </ul>
+
+    <h3>How We Use Your Information</h3>
+    <p>We use the information we collect to:</p>
+    <ul>
+      <li>Respond to your inquiries and schedule consultations</li>
+      <li>Provide birth and postpartum doula support services</li>
+      <li>Send resources you have requested, such as our Birth Plan Guide</li>
+      <li>Improve our website and the quality of our services</li>
+      <li>Comply with applicable legal obligations</li>
+    </ul>
+
+    <h3>How We Protect Your Information</h3>
+    <p>We take reasonable measures to protect your personal information from unauthorized access, use, or disclosure. Health-related information shared during your care is treated with the highest level of confidentiality. We do not sell, rent, or share your personal information with third parties for marketing purposes.</p>
+
+    <h3>Third-Party Services</h3>
+    <p>Our website may use third-party services (such as form submission processors or analytics tools) that collect data on our behalf. These services are bound by their own privacy policies. We encourage you to review those policies as applicable.</p>
+
+    <h3>Your Rights</h3>
+    <p>You have the right to request access to, correction of, or deletion of your personal information at any time. To make such a request, please contact us at <a href="mailto:jordyn@madeforthisdoula.com">jordyn@madeforthisdoula.com</a>.</p>
+
+    <h3>Data Retention</h3>
+    <p>We retain your personal information only for as long as necessary to fulfill the purposes described in this policy, or as required by law. Once your information is no longer needed, we will securely delete or anonymize it.</p>
+
+    <h3>Changes to This Policy</h3>
+    <p>We may update this Privacy Policy from time to time. Changes will be posted on this page with an updated effective date.</p>
+
+    <h3>Contact Us</h3>
+    <p>If you have questions about this Privacy Policy, please contact us at <a href="mailto:jordyn@madeforthisdoula.com">jordyn@madeforthisdoula.com</a>.</p>
+  </div>
+</div>
+
+<div class="legal-modal-overlay" id="terms-modal" onclick="if(event.target===this)closeLegalModal('terms')">
+  <div class="legal-modal">
+    <button class="legal-modal-close" onclick="closeLegalModal('terms')" aria-label="Close">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <h2>Terms of Service</h2>
+    <span class="legal-date">Effective January 1, 2026</span>
+
+    <h3>Agreement to Terms</h3>
+    <p>By accessing or using the Made For This Doula website (madeforthisdoula.com) and services, you agree to be bound by these Terms of Service. If you do not agree, please do not use our website or services.</p>
+
+    <h3>Services Provided</h3>
+    <p>Made For This Doula provides birth doula and postpartum doula support services in the Minneapolis&ndash;St. Paul metropolitan area. Our services include physical, emotional, and informational support during pregnancy, labor, delivery, and the postpartum period. We are not medical professionals and do not provide medical advice, diagnoses, or treatment.</p>
+
+    <h3>Not Medical Advice</h3>
+    <p>The information provided on this website and through our services is for general informational and educational purposes only. It is not intended as a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician, midwife, or other qualified healthcare provider with any questions regarding a medical condition or your pregnancy.</p>
+
+    <h3>Service Agreements</h3>
+    <p>Specific terms regarding doula service packages, pricing, payment schedules, cancellation policies, and scope of support will be outlined in a separate service agreement provided during or after your initial consultation. That agreement, once signed, will govern the terms of your doula care.</p>
+
+    <h3>Website Content</h3>
+    <p>All content on this website, including text, images, graphics, and downloadable resources, is the property of Made For This Doula and is protected by applicable copyright laws. You may not reproduce, distribute, or use our content for commercial purposes without prior written permission.</p>
+
+    <h3>Limitation of Liability</h3>
+    <p>Made For This Doula provides support services on a best-effort basis. We are not liable for birth outcomes or medical decisions. Our role is to support and advocate for your preferences within the scope of non-medical doula care. To the fullest extent permitted by law, we shall not be liable for any indirect, incidental, or consequential damages arising from the use of our website or services.</p>
+
+    <h3>Confidentiality</h3>
+    <p>We respect the deeply personal nature of the information you share with us. Details about your pregnancy, birth, and postpartum experience will be kept confidential unless you provide written consent for us to share, or as required by law.</p>
+
+    <h3>Changes to These Terms</h3>
+    <p>We reserve the right to update these Terms of Service at any time. Changes will be posted on this page with an updated effective date. Continued use of our website or services after changes constitutes your acceptance of the revised terms.</p>
+
+    <h3>Governing Law</h3>
+    <p>These Terms of Service are governed by and construed in accordance with the laws of the State of Minnesota, without regard to its conflict of law provisions.</p>
+
+    <h3>Contact Us</h3>
+    <p>If you have questions about these Terms of Service, please contact us at <a href="mailto:jordyn@madeforthisdoula.com">jordyn@madeforthisdoula.com</a>.</p>
+  </div>
+</div>
 
 <script>
 // Scroll reveal
@@ -2414,12 +2579,13 @@ var guidePdfData = "JVBERi0xLjcKJfCflqQKNSAwIG9iago8PC9GaWx0ZXIgL0ZsYXRlRGVjb2Rl
 function handleGuideDownload(e) {
   e.preventDefault();
   var form = document.getElementById('guide-form');
-  var name = form.querySelector('input[name="guide_name"]').value;
+  var firstName = form.querySelector('input[name="guide_first"]').value;
+  var lastName = form.querySelector('input[name="guide_last"]').value;
   var email = form.querySelector('input[name="guide_email"]').value;
   fetch('https://formsubmit.co/ajax/jordyn@madeforthisdoula.com', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-    body: JSON.stringify({ name: name, email: email, _subject: 'New Birth Plan Guide download from ' + name, _template: 'table' })
+    body: JSON.stringify({ first_name: firstName, last_name: lastName, email: email, _subject: 'New Birth Plan Guide download from ' + firstName + ' ' + lastName, _template: 'table' })
   }).catch(function() {});
   var link = document.createElement('a');
   link.href = 'data:application/pdf;base64,' + guidePdfData;
@@ -2431,6 +2597,75 @@ function handleGuideDownload(e) {
   document.getElementById('guide-success').style.display = 'block';
   return false;
 }
+
+
+// Form auto-formatting
+(function() {
+  // Phone number: format as (612) 555-1234 as user types
+  var phoneInput = document.getElementById('form-phone');
+  if (phoneInput) {
+    phoneInput.addEventListener('input', function(e) {
+      var digits = this.value.replace(/\D/g, '').substring(0, 10);
+      var formatted = '';
+      if (digits.length > 0) formatted = '(' + digits.substring(0, 3);
+      if (digits.length >= 3) formatted += ') ';
+      if (digits.length >= 3) formatted += digits.substring(3, 6);
+      if (digits.length >= 6) formatted += '-' + digits.substring(6, 10);
+      this.value = formatted;
+    });
+  }
+
+  // Name fields: auto-capitalize first letter of each word
+  function titleCaseHandler(e) {
+    var input = e.target;
+    var pos = input.selectionStart;
+    var val = input.value;
+    var formatted = val.replace(/\b\w/g, function(c) { return c.toUpperCase(); });
+    if (formatted !== val) {
+      input.value = formatted;
+      input.setSelectionRange(pos, pos);
+    }
+  }
+  var nameFields = [
+    document.getElementById('form-name'),
+    document.querySelector('input[name="guide_first"]'),
+    document.querySelector('input[name="guide_last"]')
+  ];
+  nameFields.forEach(function(el) {
+    if (el) el.addEventListener('input', titleCaseHandler);
+  });
+
+  // Email fields: auto-lowercase
+  function lowerCaseHandler(e) {
+    var input = e.target;
+    var pos = input.selectionStart;
+    var lower = input.value.toLowerCase();
+    if (lower !== input.value) {
+      input.value = lower;
+      input.setSelectionRange(pos, pos);
+    }
+  }
+  var emailFields = [
+    document.getElementById('form-email'),
+    document.querySelector('input[name="guide_email"]')
+  ];
+  emailFields.forEach(function(el) {
+    if (el) el.addEventListener('input', lowerCaseHandler);
+  });
+})();
+
+// Legal modals
+function openLegalModal(type) {
+  var modal = document.getElementById(type + '-modal');
+  if (modal) { modal.classList.add('active'); document.body.style.overflow = 'hidden'; }
+}
+function closeLegalModal(type) {
+  var modal = document.getElementById(type + '-modal');
+  if (modal) { modal.classList.remove('active'); document.body.style.overflow = ''; }
+}
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') { closeLegalModal('privacy'); closeLegalModal('terms'); }
+});
 
 </script>
 </body>

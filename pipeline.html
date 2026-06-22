@@ -3,983 +3,980 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Track CPA — Tax Return Pipeline</title>
 <meta name="robots" content="noindex, nofollow">
+<title>Track CPA — Tax Return Pipeline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0f1117;
-    --surface: #1a1d27;
-    --surface2: #232636;
-    --border: #2e3147;
-    --border-light: #3d4166;
-    --text: #e8eaf6;
-    --text-muted: #8b90b8;
-    --text-dim: #5a5f82;
-    --accent: #6c72ff;
-    --accent-hover: #7c82ff;
-    --accent-dim: rgba(108,114,255,0.15);
-    --green: #34d399;
-    --green-dim: rgba(52,211,153,0.15);
-    --yellow: #fbbf24;
-    --yellow-dim: rgba(251,191,36,0.15);
-    --red: #f87171;
-    --red-dim: rgba(248,113,113,0.15);
-    --blue: #60a5fa;
-    --blue-dim: rgba(96,165,250,0.15);
-    --purple: #a78bfa;
-    --purple-dim: rgba(167,139,250,0.15);
-    --orange: #fb923c;
-    --orange-dim: rgba(251,146,60,0.15);
-    --radius: 8px;
-    --radius-sm: 5px;
-    --shadow: 0 4px 24px rgba(0,0,0,0.4);
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { font-size: 14px; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+/* ─── TOKENS ─── */
+:root {
+  --bg:           #0c0e14;
+  --surface:      #13151f;
+  --surface2:     #1c1f2e;
+  --surface3:     #22263a;
+  --border:       #252838;
+  --border-h:     #363a5a;
+  --text:         #e2e4f0;
+  --text-muted:   #7b7fa8;
+  --text-dim:     #4a4d6a;
+  --accent:       #5b6af0;
+  --accent-h:     #6b7aff;
+  --accent-dim:   rgba(91,106,240,.15);
+  --green:        #22c97a;
+  --green-dim:    rgba(34,201,122,.13);
+  --yellow:       #e8a020;
+  --yellow-dim:   rgba(232,160,32,.13);
+  --red:          #e05454;
+  --red-dim:      rgba(224,84,84,.13);
+  --purple:       #9b6ef0;
+  --purple-dim:   rgba(155,110,240,.13);
+  --orange:       #e07840;
+  --orange-dim:   rgba(224,120,64,.13);
+  --blue:         #4fa8e8;
+  --blue-dim:     rgba(79,168,232,.13);
+  --pink:         #d45fa8;
+  --pink-dim:     rgba(212,95,168,.13);
+  --r:            8px;
+  --r-sm:         5px;
+  --r-lg:         12px;
+  --shadow:       0 4px 32px rgba(0,0,0,.5);
+  --shadow-sm:    0 2px 12px rgba(0,0,0,.35);
+  --nav-h:        56px;
+}
 
-  /* ─── TOP NAV ─── */
-  .topnav {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 0 24px;
-    height: 56px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-  .topnav-logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: 700;
-    font-size: 15px;
-    letter-spacing: -0.3px;
-    color: var(--text);
-    text-decoration: none;
-  }
-  .topnav-logo .badge {
-    font-size: 10px;
-    font-weight: 600;
-    background: var(--accent-dim);
-    color: var(--accent);
-    border: 1px solid var(--accent);
-    padding: 2px 6px;
-    border-radius: 20px;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-  }
-  .topnav-divider { width: 1px; height: 24px; background: var(--border); margin: 0 4px; }
-  .topnav-title { color: var(--text-muted); font-size: 13px; }
-  .topnav-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
-  .year-selector {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 5px 10px;
-    border-radius: var(--radius-sm);
-    font-size: 13px;
-    cursor: pointer;
-    outline: none;
-  }
-  .year-selector:focus { border-color: var(--accent); }
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 7px 14px;
-    border-radius: var(--radius-sm);
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    border: none;
-    transition: all 0.15s;
-    white-space: nowrap;
-  }
-  .btn-primary { background: var(--accent); color: #fff; }
-  .btn-primary:hover { background: var(--accent-hover); }
-  .btn-ghost { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
-  .btn-ghost:hover { background: var(--surface2); color: var(--text); border-color: var(--border-light); }
-  .btn-danger { background: var(--red-dim); color: var(--red); border: 1px solid transparent; }
-  .btn-danger:hover { border-color: var(--red); }
-  .btn svg { flex-shrink: 0; }
+/* ─── RESET ─── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:14px;height:100%}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  min-height:100vh;overflow-x:hidden;line-height:1.5;
+}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select,textarea{font-family:inherit;color:inherit;background:none;border:none;outline:none}
+ul{list-style:none}
 
-  /* ─── TOOLBAR ─── */
-  .toolbar {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 10px 24px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-  .search-wrap {
-    position: relative;
-    flex: 1;
-    min-width: 220px;
-    max-width: 320px;
-  }
-  .search-wrap svg {
-    position: absolute;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-dim);
-    pointer-events: none;
-  }
-  .search-input {
-    width: 100%;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 7px 10px 7px 32px;
-    border-radius: var(--radius-sm);
-    font-size: 13px;
-    outline: none;
-  }
-  .search-input:focus { border-color: var(--accent); }
-  .search-input::placeholder { color: var(--text-dim); }
-  .filter-select {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 7px 10px;
-    border-radius: var(--radius-sm);
-    font-size: 13px;
-    cursor: pointer;
-    outline: none;
-  }
-  .filter-select:focus { border-color: var(--accent); }
-  .toolbar-spacer { flex: 1; }
-  .view-toggle {
-    display: flex;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    overflow: hidden;
-  }
-  .view-btn {
-    padding: 6px 10px;
-    background: none;
-    border: none;
-    color: var(--text-dim);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    transition: all 0.15s;
-  }
-  .view-btn.active { background: var(--accent-dim); color: var(--accent); }
-  .view-btn:hover:not(.active) { color: var(--text); }
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border-h);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--text-dim)}
 
-  /* ─── STATS BAR ─── */
-  .stats-bar {
-    display: flex;
-    gap: 1px;
-    background: var(--border);
-    border-bottom: 1px solid var(--border);
-  }
-  .stat-chip {
-    flex: 1;
-    background: var(--surface);
-    padding: 10px 16px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .stat-chip .dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .stat-chip .label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
-  .stat-chip .val { font-size: 18px; font-weight: 700; margin-top: 1px; }
+/* ─── TOP NAV ─── */
+.topnav{
+  position:sticky;top:0;z-index:100;
+  height:var(--nav-h);
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:12px;
+  padding:0 20px;
+  backdrop-filter:blur(8px);
+}
+.nav-logo{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.nav-logo-mark{
+  width:32px;height:32px;border-radius:8px;
+  background:linear-gradient(135deg,var(--accent),var(--purple));
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:14px;color:#fff;letter-spacing:-.5px;
+}
+.nav-logo-text{font-size:15px;font-weight:600;color:var(--text);letter-spacing:-.2px}
+.nav-internal-badge{
+  font-size:10px;font-weight:600;letter-spacing:.6px;
+  background:var(--accent-dim);color:var(--accent);
+  border:1px solid rgba(91,106,240,.3);
+  padding:2px 7px;border-radius:20px;text-transform:uppercase;
+}
+.nav-spacer{flex:1}
+.nav-year-select{
+  background:var(--surface2);border:1px solid var(--border);
+  color:var(--text);padding:5px 10px;border-radius:var(--r-sm);
+  font-size:13px;font-weight:500;cursor:pointer;
+  transition:border-color .15s;
+}
+.nav-year-select:hover{border-color:var(--border-h)}
+.nav-count-badge{
+  background:var(--surface2);border:1px solid var(--border);
+  padding:5px 12px;border-radius:var(--r-sm);
+  font-size:13px;color:var(--text-muted);
+}
+.nav-count-badge span{color:var(--text);font-weight:600}
+.btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 14px;border-radius:var(--r-sm);
+  font-size:13px;font-weight:500;
+  transition:background .15s,border-color .15s,opacity .15s;
+  cursor:pointer;white-space:nowrap;
+}
+.btn-ghost{background:var(--surface2);border:1px solid var(--border);color:var(--text-muted)}
+.btn-ghost:hover{border-color:var(--border-h);color:var(--text);background:var(--surface3)}
+.btn-primary{background:var(--accent);color:#fff;border:1px solid transparent}
+.btn-primary:hover{background:var(--accent-h)}
+.btn-danger{background:var(--red-dim);color:var(--red);border:1px solid rgba(224,84,84,.3)}
+.btn-danger:hover{background:rgba(224,84,84,.22)}
 
-  /* ─── KANBAN BOARD ─── */
-  .board-wrap {
-    overflow-x: auto;
-    padding: 20px 24px;
-    height: calc(100vh - 56px - 52px - 48px);
-  }
-  .board {
-    display: flex;
-    gap: 12px;
-    height: 100%;
-    min-width: max-content;
-  }
-  .column {
-    width: 260px;
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-  }
-  .column-header {
-    padding: 12px 14px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    border-bottom: 1px solid var(--border);
-    flex-shrink: 0;
-  }
-  .column-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .column-title {
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.6px;
-    color: var(--text-muted);
-    flex: 1;
-  }
-  .column-count {
-    font-size: 11px;
-    font-weight: 700;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: var(--text-muted);
-    padding: 1px 7px;
-    border-radius: 20px;
-  }
-  .column-cards {
-    flex: 1;
-    overflow-y: auto;
-    padding: 8px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .column-cards::-webkit-scrollbar { width: 4px; }
-  .column-cards::-webkit-scrollbar-track { background: transparent; }
-  .column-cards::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-  .column.drag-over { border-color: var(--accent); background: var(--accent-dim); }
+/* ─── ATTENTION BANNER ─── */
+.attention-banner{
+  background:linear-gradient(90deg,rgba(232,160,32,.08),rgba(224,84,84,.06));
+  border-bottom:1px solid rgba(232,160,32,.2);
+  padding:10px 20px;
+  display:flex;align-items:flex-start;gap:12px;
+  transition:all .3s;
+}
+.attention-banner.hidden{display:none}
+.banner-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.banner-body{flex:1;display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.banner-label{font-size:13px;font-weight:600;color:var(--yellow);white-space:nowrap}
+.banner-chips{display:flex;flex-wrap:wrap;gap:6px}
+.banner-chip{
+  font-size:11px;font-weight:500;
+  background:rgba(232,160,32,.12);
+  border:1px solid rgba(232,160,32,.25);
+  color:#c8901a;padding:2px 9px;border-radius:20px;
+  cursor:pointer;transition:background .15s;
+}
+.banner-chip:hover{background:rgba(232,160,32,.22)}
+.banner-chip.red-chip{
+  background:rgba(224,84,84,.12);border-color:rgba(224,84,84,.25);color:var(--red);
+}
+.banner-dismiss{
+  flex-shrink:0;font-size:18px;color:var(--text-dim);
+  cursor:pointer;transition:color .15s;padding:0 4px;
+}
+.banner-dismiss:hover{color:var(--text-muted)}
 
-  /* ─── RETURN CARD ─── */
-  .card {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 11px 12px;
-    cursor: pointer;
-    transition: border-color 0.15s, box-shadow 0.15s;
-    position: relative;
-    user-select: none;
-  }
-  .card:hover { border-color: var(--border-light); box-shadow: 0 2px 12px rgba(0,0,0,0.3); }
-  .card.dragging { opacity: 0.4; }
-  .card-top { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px; }
-  .card-type-badge {
-    font-size: 10px;
-    font-weight: 700;
-    padding: 2px 7px;
-    border-radius: 4px;
-    letter-spacing: 0.3px;
-    flex-shrink: 0;
-    margin-top: 1px;
-  }
-  .card-client { font-size: 13px; font-weight: 600; color: var(--text); line-height: 1.3; flex: 1; }
-  .card-meta {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-bottom: 7px;
-  }
-  .card-meta-item {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 11px;
-    color: var(--text-muted);
-  }
-  .card-meta-item svg { color: var(--text-dim); }
-  .card-footer { display: flex; align-items: center; gap: 6px; }
-  .priority-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .card-due {
-    font-size: 11px;
-    color: var(--text-muted);
-    flex: 1;
-  }
-  .card-due.overdue { color: var(--red); }
-  .card-due.soon { color: var(--yellow); }
-  .card-initials {
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    background: var(--accent-dim);
-    color: var(--accent);
-    font-size: 9px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid var(--accent);
-    flex-shrink: 0;
-    cursor: pointer;
-    position: relative;
-  }
-  .card-initials[title]:hover::after {
-    content: attr(title);
-    position: absolute;
-    bottom: calc(100% + 6px);
-    right: 0;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 11px;
-    white-space: nowrap;
-    z-index: 10;
-  }
-  .card-note-indicator {
-    font-size: 10px;
-    color: var(--text-dim);
-  }
-  .extension-tag {
-    font-size: 10px;
-    font-weight: 600;
-    background: var(--yellow-dim);
-    color: var(--yellow);
-    padding: 1px 5px;
-    border-radius: 3px;
-  }
-  .ex-status-tag {
-    font-size: 10px;
-    font-weight: 600;
-    padding: 2px 6px;
-    border-radius: 3px;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    margin-top: 6px;
-    width: 100%;
-  }
-  .ex-status-tag::before {
-    content: '⚠';
-    font-size: 9px;
-  }
+/* ─── TOOLBAR ─── */
+.toolbar{
+  padding:10px 20px;
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+}
+.search-wrap{
+  position:relative;flex:1;min-width:160px;max-width:280px;
+}
+.search-wrap svg{
+  position:absolute;left:9px;top:50%;transform:translateY(-50%);
+  color:var(--text-dim);pointer-events:none;
+}
+.search-input{
+  width:100%;background:var(--surface2);border:1px solid var(--border);
+  border-radius:var(--r-sm);padding:6px 10px 6px 32px;
+  font-size:13px;color:var(--text);
+  transition:border-color .15s;
+}
+.search-input:focus{border-color:var(--accent)}
+.search-input::placeholder{color:var(--text-dim)}
+.filter-select{
+  background:var(--surface2);border:1px solid var(--border);
+  color:var(--text-muted);padding:6px 10px;border-radius:var(--r-sm);
+  font-size:13px;cursor:pointer;transition:border-color .15s,color .15s;
+}
+.filter-select:hover,.filter-select:focus{border-color:var(--border-h);color:var(--text)}
+.filter-select.active{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
+.toolbar-spacer{flex:1}
+.view-toggle{display:flex;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);overflow:hidden}
+.view-btn{
+  padding:6px 12px;font-size:13px;color:var(--text-muted);
+  transition:background .15s,color .15s;display:flex;align-items:center;gap:5px;
+}
+.view-btn.active{background:var(--surface3);color:var(--text)}
+.view-btn:hover:not(.active){background:var(--surface3);color:var(--text-muted)}
 
-  /* ─── LIST VIEW ─── */
-  .list-wrap {
-    padding: 20px 24px;
-    display: none;
-  }
-  .list-wrap.active { display: block; }
-  .list-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
-  }
-  .list-table th {
-    text-align: left;
-    padding: 9px 12px;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: var(--text-muted);
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    cursor: pointer;
-  }
-  .list-table th:hover { color: var(--text); }
-  .list-table td {
-    padding: 10px 12px;
-    border-bottom: 1px solid var(--border);
-    vertical-align: middle;
-  }
-  .list-table tr { background: var(--surface); transition: background 0.1s; cursor: pointer; }
-  .list-table tr:hover { background: var(--surface2); }
-  .list-table tr:last-child td { border-bottom: none; }
-  .status-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 3px 8px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 600;
-  }
+/* ─── STATS ROW ─── */
+.stats-row{
+  display:flex;gap:1px;padding:0 20px 0;
+  background:var(--border);
+  border-bottom:1px solid var(--border);
+}
+.stat-cell{
+  flex:1;background:var(--surface);
+  padding:10px 14px;display:flex;flex-direction:column;gap:2px;
+  cursor:pointer;transition:background .15s;min-width:0;
+}
+.stat-cell:first-child{border-radius:0}
+.stat-cell:hover{background:var(--surface2)}
+.stat-cell.active{background:var(--surface2);position:relative}
+.stat-cell.active::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:var(--accent);
+}
+.stat-num{font-size:20px;font-weight:700;color:var(--text);line-height:1}
+.stat-num.green{color:var(--green)}
+.stat-num.yellow{color:var(--yellow)}
+.stat-num.blue{color:var(--blue)}
+.stat-num.purple{color:var(--purple)}
+.stat-num.red{color:var(--red)}
+.stat-label{font-size:11px;color:var(--text-muted);font-weight:500;white-space:nowrap}
 
-  /* ─── MODAL ─── */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.7);
-    z-index: 200;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s;
-  }
-  .modal-overlay.open { opacity: 1; pointer-events: all; }
-  .modal {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    width: 100%;
-    max-width: 540px;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: var(--shadow);
-    transform: translateY(12px);
-    transition: transform 0.2s;
-  }
-  .modal-overlay.open .modal { transform: translateY(0); }
-  .modal::-webkit-scrollbar { width: 6px; }
-  .modal::-webkit-scrollbar-track { background: transparent; }
-  .modal::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-  .modal-header {
-    padding: 18px 20px 14px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .modal-header h2 { font-size: 16px; font-weight: 600; flex: 1; }
-  .modal-close {
-    background: none;
-    border: none;
-    color: var(--text-muted);
-    cursor: pointer;
-    padding: 4px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    transition: color 0.15s;
-  }
-  .modal-close:hover { color: var(--text); }
-  .modal-body { padding: 20px; display: flex; flex-direction: column; gap: 14px; }
-  .modal-footer {
-    padding: 14px 20px;
-    border-top: 1px solid var(--border);
-    display: flex;
-    gap: 8px;
-    justify-content: flex-end;
-  }
-  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .form-group { display: flex; flex-direction: column; gap: 5px; }
-  .form-group label {
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  .form-control {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 8px 10px;
-    border-radius: var(--radius-sm);
-    font-size: 13px;
-    outline: none;
-    width: 100%;
-    transition: border-color 0.15s;
-  }
-  .form-control:focus { border-color: var(--accent); }
-  .form-control::placeholder { color: var(--text-dim); }
-  textarea.form-control { resize: vertical; min-height: 80px; font-family: inherit; }
+/* ─── KANBAN ─── */
+.kanban-wrapper{
+  display:flex;gap:0;
+  padding:16px;
+  overflow-x:auto;
+  flex:1;
+  align-items:flex-start;
+}
+.kanban-col{
+  flex:0 0 260px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--r-lg);
+  display:flex;flex-direction:column;
+  max-height:calc(100vh - var(--nav-h) - 200px);
+  overflow:hidden;
+  transition:border-color .15s,box-shadow .15s;
+  margin-right:12px;
+}
+.kanban-col:last-child{margin-right:0}
+.kanban-col.drag-over{
+  border-color:var(--accent);
+  box-shadow:0 0 0 2px var(--accent-dim),var(--shadow-sm);
+}
+.kanban-col.collapsed{flex:0 0 48px;min-height:80px}
+.col-header{
+  padding:12px 14px;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:8px;
+  cursor:pointer;user-select:none;flex-shrink:0;
+}
+.col-header:hover{background:var(--surface2)}
+.col-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.col-title{font-size:12px;font-weight:600;letter-spacing:.3px;text-transform:uppercase;flex:1;color:var(--text-muted)}
+.col-count{
+  font-size:11px;font-weight:600;
+  background:var(--surface2);border:1px solid var(--border);
+  color:var(--text-muted);
+  padding:1px 7px;border-radius:20px;flex-shrink:0;
+}
+.col-collapse-btn{color:var(--text-dim);font-size:12px;transition:transform .2s}
+.kanban-col.collapsed .col-collapse-btn{transform:rotate(-90deg)}
+.kanban-col.collapsed .col-header{
+  flex-direction:column;writing-mode:vertical-rl;
+  text-orientation:mixed;padding:14px 10px;gap:6px;
+  justify-content:flex-start;border-bottom:none;
+}
+.kanban-col.collapsed .col-title{writing-mode:vertical-rl;font-size:11px}
+.kanban-col.collapsed .col-count{writing-mode:horizontal-tb}
+.col-body{
+  padding:10px;display:flex;flex-direction:column;gap:8px;
+  overflow-y:auto;flex:1;
+}
+.kanban-col.collapsed .col-body{display:none}
 
-  /* ─── DETAIL MODAL ─── */
-  .detail-modal { max-width: 620px; }
-  .detail-status-bar {
-    display: flex;
-    gap: 6px;
-    overflow-x: auto;
-    padding: 14px 20px;
-    border-bottom: 1px solid var(--border);
-  }
-  .detail-status-bar::-webkit-scrollbar { display: none; }
-  .stage-step {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    flex-shrink: 0;
-  }
-  .stage-step-btn {
-    padding: 5px 10px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 600;
-    cursor: pointer;
-    border: 1px solid transparent;
-    transition: all 0.15s;
-    white-space: nowrap;
-    background: var(--surface2);
-    color: var(--text-muted);
-    border-color: var(--border);
-  }
-  .stage-step-btn.current { color: #fff; }
-  .stage-step-btn.passed { opacity: 0.6; }
-  .stage-arrow { color: var(--text-dim); font-size: 11px; }
-  .detail-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-    padding: 18px 20px;
-    border-bottom: 1px solid var(--border);
-  }
-  .detail-field label { font-size: 10px; font-weight: 700; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.6px; display: block; margin-bottom: 4px; }
-  .detail-field .val { font-size: 13px; color: var(--text); }
-  .notes-section { padding: 16px 20px; }
-  .notes-section h3 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 10px; }
-  .note-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
-  .note-item {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 10px 12px;
-    font-size: 12px;
-    color: var(--text);
-    line-height: 1.5;
-  }
-  .note-item .note-meta { font-size: 10px; color: var(--text-dim); margin-bottom: 4px; }
-  .note-input-wrap { display: flex; gap: 8px; }
-  .note-input-wrap textarea { flex: 1; min-height: 60px; }
+/* Drop zone indicator */
+.drop-zone{
+  height:4px;border-radius:2px;background:var(--accent);
+  margin:2px 0;opacity:0;transition:opacity .15s;
+  pointer-events:none;
+}
+.drop-zone.active{opacity:1}
 
-  /* ─── EMPTY STATE ─── */
-  .empty-col {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 24px 12px;
-    color: var(--text-dim);
-    font-size: 12px;
-    gap: 6px;
-    border: 1px dashed var(--border);
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    transition: border-color 0.15s, color 0.15s;
-    margin-top: 4px;
-  }
-  .empty-col:hover { border-color: var(--accent); color: var(--accent); }
+/* ─── KANBAN CARD ─── */
+.card{
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  cursor:grab;
+  transition:border-color .15s,box-shadow .15s,transform .1s;
+  position:relative;overflow:hidden;
+  display:flex;flex-direction:column;
+}
+.card::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:var(--col-color,var(--accent));
+}
+.card:hover{
+  border-color:var(--border-h);
+  box-shadow:var(--shadow-sm);
+}
+.card:active{cursor:grabbing;transform:scale(.98)}
+.card.dragging{opacity:.5;box-shadow:var(--shadow)}
+.card-main{padding:10px 10px 10px 14px}
+.card-top{display:flex;align-items:center;gap:7px;margin-bottom:6px}
+.type-badge{
+  font-size:10px;font-weight:700;letter-spacing:.4px;
+  padding:2px 6px;border-radius:4px;white-space:nowrap;flex-shrink:0;
+}
+.type-1040{background:var(--accent-dim);color:var(--accent)}
+.type-1120s{background:var(--purple-dim);color:var(--purple)}
+.type-1065{background:var(--blue-dim);color:var(--blue)}
+.card-name{font-size:13px;font-weight:600;color:var(--text);line-height:1.3;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card-meta{display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-bottom:8px}
+.meta-tag{
+  font-size:10px;font-weight:500;
+  padding:1px 6px;border-radius:3px;white-space:nowrap;
+}
+.meta-year{background:var(--surface3);color:var(--text-muted)}
+.meta-state{background:var(--surface3);color:var(--text-muted)}
+.meta-ext{background:var(--yellow-dim);color:var(--yellow)}
+.ex-tag{font-size:10px;font-weight:600;padding:1px 7px;border-radius:3px}
+.ex-missing{background:var(--red-dim);color:var(--red)}
+.ex-on-ext{background:var(--orange-dim);color:var(--orange)}
+.ex-amend{background:var(--purple-dim);color:var(--purple)}
+.ex-on-hold{background:var(--yellow-dim);color:var(--yellow)}
+.ex-waiting-irs{background:var(--blue-dim);color:var(--blue)}
+.card-footer{display:flex;align-items:center;gap:7px}
+.priority-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.p-high{background:var(--red)}
+.p-medium{background:var(--yellow)}
+.p-low{background:var(--text-dim)}
+.card-due{font-size:11px;color:var(--text-muted);flex:1}
+.card-due.overdue{color:var(--red);font-weight:600}
+.card-due.soon{color:var(--yellow);font-weight:500}
+.card-note-count{
+  font-size:10px;color:var(--text-dim);display:flex;align-items:center;gap:3px;
+}
+.preparer-avatar{
+  width:22px;height:22px;border-radius:50%;
+  background:var(--surface3);border:1px solid var(--border);
+  font-size:9px;font-weight:700;color:var(--text-muted);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;text-transform:uppercase;
+}
 
-  /* ─── TOAST ─── */
-  .toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 500; display: flex; flex-direction: column; gap: 8px; }
-  .toast {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 10px 14px;
-    font-size: 13px;
-    color: var(--text);
-    box-shadow: var(--shadow);
-    animation: slideIn 0.2s ease;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .toast.success { border-color: var(--green); }
-  .toast.success svg { color: var(--green); }
-  @keyframes slideIn { from { transform: translateX(40px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+/* Card hover actions */
+.card-actions{
+  display:none;
+  padding:7px 10px 8px 14px;
+  border-top:1px solid var(--border);
+  gap:5px;flex-wrap:wrap;
+}
+.card:hover .card-actions{display:flex}
+.card-action-btn{
+  font-size:11px;font-weight:500;
+  padding:3px 9px;border-radius:4px;
+  border:1px solid var(--border);background:var(--surface);color:var(--text-muted);
+  transition:all .15s;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:4px;
+}
+.card-action-btn:hover{border-color:var(--border-h);color:var(--text)}
+.card-action-btn.next-stage{border-color:rgba(91,106,240,.4);color:var(--accent);background:var(--accent-dim)}
+.card-action-btn.next-stage:hover{background:rgba(91,106,240,.22)}
 
-  /* ─── TYPE COLORS ─── */
-  .type-1040 { background: var(--blue-dim); color: var(--blue); }
-  .type-1040nr { background: var(--purple-dim); color: var(--purple); }
-  .type-1120s { background: var(--green-dim); color: var(--green); }
-  .type-1120 { background: var(--orange-dim); color: var(--orange); }
-  .type-1065 { background: var(--yellow-dim); color: var(--yellow); }
-  .type-1041 { background: rgba(251,113,133,0.15); color: #fb7185; }
-  .type-990 { background: rgba(34,211,238,0.15); color: #22d3ee; }
+/* ─── LIST VIEW ─── */
+.list-view{padding:16px;overflow:auto;flex:1}
+.list-table{width:100%;border-collapse:separate;border-spacing:0;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden}
+.list-table th{
+  background:var(--surface2);
+  padding:9px 14px;font-size:11px;font-weight:600;letter-spacing:.4px;
+  text-transform:uppercase;color:var(--text-muted);
+  border-bottom:1px solid var(--border);
+  white-space:nowrap;cursor:pointer;user-select:none;
+  transition:color .15s;position:sticky;top:0;z-index:2;
+}
+.list-table th:hover{color:var(--text)}
+.list-table th.sorted-asc::after{content:' ↑'}
+.list-table th.sorted-desc::after{content:' ↓'}
+.list-table td{
+  padding:10px 14px;font-size:13px;
+  border-bottom:1px solid var(--border);
+  white-space:nowrap;
+}
+.list-table tr:last-child td{border-bottom:none}
+.list-table tr.list-row{cursor:pointer;transition:background .1s}
+.list-table tr.list-row:hover td{background:var(--surface2)}
+.stage-pill{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:11px;font-weight:600;padding:3px 8px;border-radius:20px;
+  white-space:nowrap;
+}
+.list-client-name{font-weight:600;color:var(--text)}
+.list-type{font-size:11px;font-weight:700;color:var(--text-muted)}
+.list-due.overdue{color:var(--red);font-weight:600}
+.list-due.soon{color:var(--yellow);font-weight:500}
 
-  .priority-high { background: var(--red); }
-  .priority-med { background: var(--yellow); }
-  .priority-low { background: var(--green); }
-  .priority-none { background: var(--border); }
+/* ─── MODAL OVERLAY ─── */
+.overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.6);
+  z-index:200;display:flex;align-items:flex-start;justify-content:center;
+  padding:40px 20px;backdrop-filter:blur(4px);
+  opacity:0;pointer-events:none;transition:opacity .2s;
+}
+.overlay.open{opacity:1;pointer-events:all}
+.modal{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r-lg);width:100%;max-width:640px;
+  max-height:calc(100vh - 80px);overflow:hidden;
+  display:flex;flex-direction:column;
+  box-shadow:var(--shadow);
+  transform:translateY(-8px);transition:transform .2s;
+}
+.overlay.open .modal{transform:translateY(0)}
+.modal-header{
+  padding:16px 20px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:12px;flex-shrink:0;
+}
+.modal-title{font-size:16px;font-weight:700;flex:1;color:var(--text)}
+.modal-close{
+  width:28px;height:28px;border-radius:6px;
+  background:var(--surface2);border:1px solid var(--border);
+  color:var(--text-muted);font-size:16px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .15s;
+}
+.modal-close:hover{border-color:var(--border-h);color:var(--text)}
+.modal-body{padding:20px;overflow-y:auto;flex:1}
+.modal-footer{
+  padding:14px 20px;border-top:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;flex-shrink:0;
+}
 
-  /* Stage colors */
-  .col-intake .column-dot { background: var(--text-dim); }
-  .col-organizer .column-dot { background: var(--blue); }
-  .col-waiting-docs .column-dot { background: var(--yellow); }
-  .col-in-prep .column-dot { background: var(--purple); }
-  .col-in-review .column-dot { background: var(--orange); }
-  .col-waiting-sig .column-dot { background: #f472b6; }
-  .col-ready .column-dot { background: var(--accent); }
-  .col-filed .column-dot { background: var(--green); }
-  .col-complete .column-dot { background: #34d399; }
+/* Progress bar inside modal */
+.stage-progress{margin-bottom:20px}
+.stage-progress-label{font-size:11px;font-weight:600;letter-spacing:.3px;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px}
+.stage-steps{display:flex;gap:0;position:relative}
+.stage-steps::before{
+  content:'';position:absolute;top:12px;left:0;right:0;height:2px;
+  background:var(--border);z-index:0;
+}
+.stage-step{
+  display:flex;flex-direction:column;align-items:center;
+  flex:1;position:relative;z-index:1;cursor:pointer;
+  transition:opacity .15s;
+}
+.stage-step:hover{opacity:.8}
+.step-dot{
+  width:24px;height:24px;border-radius:50%;
+  border:2px solid var(--border);background:var(--surface);
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:700;color:var(--text-dim);
+  transition:all .2s;margin-bottom:4px;
+}
+.stage-step.done .step-dot{background:var(--green);border-color:var(--green);color:#fff}
+.stage-step.current .step-dot{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 0 0 4px var(--accent-dim)}
+.step-label{font-size:9px;font-weight:500;color:var(--text-dim);text-align:center;line-height:1.3;max-width:52px}
+.stage-step.done .step-label,.stage-step.current .step-label{color:var(--text-muted)}
 
-  /* ─── RESPONSIVE ─── */
-  @media (max-width: 600px) {
-    .topnav { padding: 0 14px; }
-    .toolbar { padding: 8px 14px; }
-    .board-wrap { padding: 12px 14px; }
-    .stats-bar { display: none; }
-    .form-row { grid-template-columns: 1fr; }
-  }
+/* Tabs */
+.tabs{display:flex;border-bottom:1px solid var(--border);margin:0 -20px;padding:0 20px;gap:0;margin-bottom:16px;flex-shrink:0}
+.tab-btn{
+  padding:10px 16px;font-size:13px;font-weight:500;color:var(--text-muted);
+  border-bottom:2px solid transparent;margin-bottom:-1px;
+  cursor:pointer;transition:color .15s,border-color .15s;
+}
+.tab-btn.active{color:var(--text);border-bottom-color:var(--accent)}
+.tab-btn:hover:not(.active){color:var(--text)}
+.tab-pane{display:none}
+.tab-pane.active{display:block}
+
+/* Detail grid */
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+.detail-field{display:flex;flex-direction:column;gap:4px}
+.detail-field.full{grid-column:1/-1}
+.field-label{font-size:11px;font-weight:600;letter-spacing:.3px;text-transform:uppercase;color:var(--text-dim)}
+.field-value{font-size:13px;color:var(--text);font-weight:500}
+.field-value.muted{color:var(--text-muted)}
+
+/* Activity log */
+.activity-list{display:flex;flex-direction:column;gap:0}
+.activity-item{
+  display:flex;gap:12px;padding:12px 0;
+  border-bottom:1px solid var(--border);
+}
+.activity-item:last-child{border-bottom:none}
+.activity-dot{
+  width:8px;height:8px;border-radius:50%;background:var(--text-dim);
+  flex-shrink:0;margin-top:5px;
+}
+.activity-dot.note{background:var(--accent)}
+.activity-dot.stage{background:var(--green)}
+.activity-dot.create{background:var(--purple)}
+.activity-content{flex:1;min-width:0}
+.activity-text{font-size:13px;color:var(--text);line-height:1.5}
+.activity-time{font-size:11px;color:var(--text-dim);margin-top:2px}
+.add-note-area{margin-top:16px}
+.note-textarea{
+  width:100%;background:var(--surface2);border:1px solid var(--border);
+  border-radius:var(--r);padding:10px 12px;font-size:13px;color:var(--text);
+  resize:vertical;min-height:80px;transition:border-color .15s;line-height:1.5;
+}
+.note-textarea:focus{border-color:var(--accent)}
+.note-textarea::placeholder{color:var(--text-dim)}
+
+/* ─── FORM ─── */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-field{display:flex;flex-direction:column;gap:6px}
+.form-field.full{grid-column:1/-1}
+.form-label{font-size:11px;font-weight:600;letter-spacing:.3px;text-transform:uppercase;color:var(--text-dim)}
+.form-input,.form-select,.form-textarea{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:var(--r-sm);padding:8px 12px;
+  font-size:13px;color:var(--text);
+  transition:border-color .15s;
+  width:100%;
+}
+.form-select{cursor:pointer}
+.form-textarea{resize:vertical;min-height:70px;line-height:1.5}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--accent)}
+.form-input::placeholder,.form-textarea::placeholder{color:var(--text-dim)}
+.form-select option{background:var(--surface2)}
+.form-check-row{display:flex;align-items:center;gap:8px;margin-top:2px}
+.form-check{width:16px;height:16px;accent-color:var(--accent);cursor:pointer}
+.form-check-label{font-size:13px;color:var(--text-muted)}
+
+/* ─── CONFIRM DIALOG ─── */
+.confirm-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.7);
+  z-index:300;display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .15s;
+}
+.confirm-overlay.open{opacity:1;pointer-events:all}
+.confirm-box{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r-lg);padding:24px;max-width:360px;width:90%;
+  box-shadow:var(--shadow);text-align:center;
+}
+.confirm-box h3{font-size:16px;font-weight:700;margin-bottom:8px}
+.confirm-box p{font-size:13px;color:var(--text-muted);margin-bottom:20px;line-height:1.6}
+.confirm-btns{display:flex;gap:10px;justify-content:center}
+
+/* ─── TOAST ─── */
+.toasts{
+  position:fixed;bottom:20px;right:20px;z-index:400;
+  display:flex;flex-direction:column;gap:8px;
+  pointer-events:none;
+}
+.toast{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:var(--r);padding:10px 16px;
+  font-size:13px;font-weight:500;color:var(--text);
+  box-shadow:var(--shadow);
+  animation:toastIn .25s ease;pointer-events:all;
+  display:flex;align-items:center;gap:8px;
+}
+.toast.success{border-left:3px solid var(--green)}
+.toast.info{border-left:3px solid var(--accent)}
+.toast.warn{border-left:3px solid var(--yellow)}
+@keyframes toastIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+
+/* ─── EMPTY STATE ─── */
+.empty-col{
+  text-align:center;padding:24px 12px;color:var(--text-dim);
+  font-size:12px;
+}
+.empty-list{
+  text-align:center;padding:60px 20px;color:var(--text-muted);
+}
+.empty-list-icon{font-size:40px;margin-bottom:12px}
+.empty-list-text{font-size:14px;font-weight:500;color:var(--text-muted)}
+
+/* ─── RESPONSIVE / MISC ─── */
+.main-area{display:flex;flex-direction:column;min-height:calc(100vh - var(--nav-h))}
+.view-area{flex:1;overflow:hidden;display:flex;flex-direction:column}
+.kanban-wrapper{flex:1}
+
+.hidden{display:none!important}
+
+/* Priority select colors */
+select.form-select option[value="High"]{color:var(--red)}
+select.form-select option[value="Medium"]{color:var(--yellow)}
+select.form-select option[value="Low"]{color:var(--text)}
+
+/* Stage colors map via CSS variables on column */
+.col-intake{--col-color:#7b7fa8}
+.col-organizer-sent{--col-color:#9b6ef0}
+.col-waiting-docs{--col-color:#e07840}
+.col-in-prep{--col-color:#4fa8e8}
+.col-in-review{--col-color:#e8a020}
+.col-waiting-sig{--col-color:#d45fa8}
+.col-filed{--col-color:#22c97a}
+.col-complete{--col-color:#4a4d6a}
 </style>
 </head>
 <body>
 
 <!-- TOP NAV -->
 <nav class="topnav">
-  <a class="topnav-logo" href="#">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-    Track CPA
-    <span class="badge">Internal</span>
-  </a>
-  <div class="topnav-divider"></div>
-  <span class="topnav-title">Tax Return Pipeline</span>
-  <div class="topnav-right">
-    <select class="year-selector" id="yearFilter" onchange="applyFilters()">
-      <option value="">All Years</option>
-      <option value="2025" selected>Tax Year 2025</option>
-      <option value="2024">Tax Year 2024</option>
-      <option value="2023">Tax Year 2023</option>
-    </select>
-    <button class="btn btn-ghost" onclick="exportCSV()">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      Export
-    </button>
-    <button class="btn btn-primary" onclick="openAddModal()">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-      Add Return
-    </button>
+  <div class="nav-logo">
+    <div class="nav-logo-mark">TC</div>
+    <span class="nav-logo-text">Track CPA</span>
+    <span class="nav-internal-badge">Internal</span>
   </div>
+  <div class="nav-spacer"></div>
+  <div class="nav-count-badge"><span id="totalCountNav">0</span> returns</div>
+  <select class="nav-year-select" id="yearFilter">
+    <option value="">All Years</option>
+    <option value="2025" selected>2025</option>
+    <option value="2024">2024</option>
+    <option value="2023">2023</option>
+  </select>
+  <button class="btn btn-ghost" id="exportBtn">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+    Export CSV
+  </button>
+  <button class="btn btn-primary" id="addBtn">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    Add Return
+  </button>
 </nav>
+
+<!-- ATTENTION BANNER -->
+<div class="attention-banner" id="attentionBanner">
+  <div class="banner-icon">&#9888;</div>
+  <div class="banner-body">
+    <span class="banner-label" id="bannerLabel">0 returns need attention:</span>
+    <div class="banner-chips" id="bannerChips"></div>
+  </div>
+  <span class="banner-dismiss" id="bannerDismiss" title="Dismiss">&#215;</span>
+</div>
 
 <!-- TOOLBAR -->
 <div class="toolbar">
   <div class="search-wrap">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    <input class="search-input" id="searchInput" type="text" placeholder="Search clients…" oninput="applyFilters()">
+    <input type="text" class="search-input" id="searchInput" placeholder="Search clients, notes…">
   </div>
-  <select class="filter-select" id="typeFilter" onchange="applyFilters()">
+  <select class="filter-select" id="typeFilter">
     <option value="">All Types</option>
-    <option value="1040">1040 — Individual</option>
-    <option value="1040-NR">1040-NR — Non-Resident</option>
-    <option value="1120S">1120S — S-Corp</option>
-    <option value="1120">1120 — C-Corp</option>
-    <option value="1065">1065 — Partnership</option>
-    <option value="1041">1041 — Trust/Estate</option>
-    <option value="990">990 — Non-Profit</option>
+    <option value="1040">1040</option>
+    <option value="1120S">1120S</option>
+    <option value="1065">1065</option>
   </select>
-  <select class="filter-select" id="preparerFilter" onchange="applyFilters()">
+  <select class="filter-select" id="preparerFilter">
     <option value="">All Preparers</option>
+    <option value="Conner">Conner</option>
+    <option value="Andrew">Andrew</option>
+    <option value="Kaitlyn">Kaitlyn</option>
+    <option value="Emily">Emily</option>
+    <option value="Brad">Brad</option>
+    <option value="Austin">Austin</option>
   </select>
-  <select class="filter-select" id="priorityFilter" onchange="applyFilters()">
+  <select class="filter-select" id="priorityFilter">
     <option value="">All Priorities</option>
     <option value="High">High</option>
     <option value="Medium">Medium</option>
     <option value="Low">Low</option>
   </select>
-  <select class="filter-select" id="exStatusFilter" onchange="applyFilters()">
-    <option value="">All Statuses</option>
-    <option value="">Active</option>
+  <select class="filter-select" id="exFilter">
+    <option value="">All Status</option>
     <option value="missing-info">Missing Info</option>
     <option value="on-extension">On Extension</option>
-    <option value="waiting-irs">Waiting on IRS</option>
-    <option value="waiting-state">Waiting on State</option>
+    <option value="amendment">Amendment</option>
     <option value="on-hold">On Hold</option>
-    <option value="amendment">Amendment Needed</option>
-    <option value="payment-pending">Payment Pending</option>
+    <option value="waiting-irs">Waiting IRS</option>
   </select>
   <div class="toolbar-spacer"></div>
   <div class="view-toggle">
-    <button class="view-btn active" id="kanbanBtn" onclick="setView('kanban')" title="Kanban view">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="5" height="18" rx="1"/><rect x="10" y="3" width="5" height="18" rx="1"/><rect x="17" y="3" width="4" height="18" rx="1"/></svg>
+    <button class="view-btn active" id="kanbanViewBtn">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="18"/><rect x="14" y="3" width="7" height="9"/><rect x="14" y="16" width="7" height="5"/></svg>
+      Kanban
     </button>
-    <button class="view-btn" id="listBtn" onclick="setView('list')" title="List view">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+    <button class="view-btn" id="listViewBtn">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      List
     </button>
   </div>
 </div>
 
-<!-- STATS BAR -->
-<div class="stats-bar" id="statsBar"></div>
-
-<!-- KANBAN BOARD -->
-<div class="board-wrap" id="boardWrap">
-  <div class="board" id="board"></div>
+<!-- STATS ROW -->
+<div class="stats-row">
+  <div class="stat-cell" data-stat="all" onclick="filterByStat('all')">
+    <div class="stat-num" id="sStat">0</div>
+    <div class="stat-label">Total Returns</div>
+  </div>
+  <div class="stat-cell" data-stat="in-progress" onclick="filterByStat('in-progress')">
+    <div class="stat-num blue" id="ipStat">0</div>
+    <div class="stat-label">In Progress</div>
+  </div>
+  <div class="stat-cell" data-stat="waiting-client" onclick="filterByStat('waiting-client')">
+    <div class="stat-num yellow" id="wcStat">0</div>
+    <div class="stat-label">Waiting on Client</div>
+  </div>
+  <div class="stat-cell" data-stat="waiting-irs" onclick="filterByStat('waiting-irs')">
+    <div class="stat-num purple" id="wiStat">0</div>
+    <div class="stat-label">Waiting on IRS</div>
+  </div>
+  <div class="stat-cell" data-stat="filed" onclick="filterByStat('filed')">
+    <div class="stat-num green" id="filStat">0</div>
+    <div class="stat-label">Filed</div>
+  </div>
+  <div class="stat-cell" data-stat="complete" onclick="filterByStat('complete')">
+    <div class="stat-num" id="compStat">0</div>
+    <div class="stat-label">Complete</div>
+  </div>
 </div>
 
-<!-- LIST VIEW -->
-<div class="list-wrap" id="listWrap">
-  <table class="list-table">
-    <thead>
-      <tr>
-        <th onclick="sortList('client')">Client ↕</th>
-        <th onclick="sortList('type')">Type ↕</th>
-        <th onclick="sortList('year')">Year ↕</th>
-        <th onclick="sortList('stage')">Stage ↕</th>
-        <th onclick="sortList('preparer')">Preparer ↕</th>
-        <th onclick="sortList('priority')">Priority ↕</th>
-        <th onclick="sortList('dueDate')">Due Date ↕</th>
-        <th>Ext</th>
-      </tr>
-    </thead>
-    <tbody id="listBody"></tbody>
-  </table>
+<!-- MAIN AREA -->
+<div class="main-area">
+  <div class="view-area" id="viewArea">
+    <!-- Kanban or List injected here -->
+  </div>
 </div>
 
-<!-- ADD/EDIT MODAL -->
-<div class="modal-overlay" id="addModal">
-  <div class="modal">
+<!-- DETAIL MODAL -->
+<div class="overlay" id="detailOverlay">
+  <div class="modal" id="detailModal">
     <div class="modal-header">
-      <h2 id="modalTitle">Add Tax Return</h2>
-      <button class="modal-close" onclick="closeAddModal()">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
+      <div style="flex:1;min-width:0">
+        <div class="modal-title" id="detailTitle"></div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:2px" id="detailSubtitle"></div>
+      </div>
+      <button class="modal-close" id="detailClose">&#215;</button>
     </div>
-    <div class="modal-body">
-      <div class="form-row">
-        <div class="form-group" style="grid-column:1/-1">
-          <label>Client Name *</label>
-          <input class="form-control" id="f-client" type="text" placeholder="e.g. John & Jane Smith" required>
+    <div class="modal-body" id="detailBody">
+      <!-- Stage progress -->
+      <div class="stage-progress">
+        <div class="stage-progress-label">Pipeline Stage</div>
+        <div class="stage-steps" id="detailStageSteps"></div>
+      </div>
+      <!-- Tabs -->
+      <div class="tabs" id="detailTabs">
+        <button class="tab-btn active" data-tab="details">Details</button>
+        <button class="tab-btn" data-tab="activity">Activity</button>
+      </div>
+      <div class="tab-pane active" id="tab-details">
+        <div class="detail-grid" id="detailGrid"></div>
+        <button class="btn btn-primary" id="detailNextStage" style="margin-top:4px">Move to Next Stage &rarr;</button>
+      </div>
+      <div class="tab-pane" id="tab-activity">
+        <div class="activity-list" id="activityList"></div>
+        <div class="add-note-area">
+          <textarea class="note-textarea" id="noteInput" placeholder="Add a note…"></textarea>
+          <div style="margin-top:8px;display:flex;justify-content:flex-end">
+            <button class="btn btn-primary" id="addNoteBtn">Add Note</button>
+          </div>
         </div>
       </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Return Type *</label>
-          <select class="form-control" id="f-type">
-            <option value="1040">1040 — Individual</option>
-            <option value="1040-NR">1040-NR — Non-Resident</option>
-            <option value="1120S">1120S — S-Corp</option>
-            <option value="1120">1120 — C-Corp</option>
-            <option value="1065">1065 — Partnership</option>
-            <option value="1041">1041 — Trust/Estate</option>
-            <option value="990">990 — Non-Profit</option>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" id="detailEditBtn">Edit</button>
+      <div style="flex:1"></div>
+      <button class="btn btn-danger" id="detailDeleteBtn">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD / EDIT MODAL -->
+<div class="overlay" id="formOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="formTitle">Add Return</div>
+      <button class="modal-close" id="formClose">&#215;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid" id="formGrid">
+        <div class="form-field">
+          <label class="form-label">Client Name *</label>
+          <input type="text" class="form-input" id="f-client" placeholder="e.g. Smith, John">
+        </div>
+        <div class="form-field">
+          <label class="form-label">Client Email</label>
+          <input type="email" class="form-input" id="f-email" placeholder="client@example.com">
+        </div>
+        <div class="form-field">
+          <label class="form-label">Return Type *</label>
+          <select class="form-select" id="f-type">
+            <option value="1040">1040</option>
+            <option value="1120S">1120S</option>
+            <option value="1065">1065</option>
+            <option value="1041">1041</option>
+            <option value="990">990</option>
           </select>
         </div>
-        <div class="form-group">
-          <label>Tax Year *</label>
-          <select class="form-control" id="f-year">
-            <option value="2025">2025</option>
+        <div class="form-field">
+          <label class="form-label">Tax Year *</label>
+          <select class="form-select" id="f-year">
+            <option value="2025" selected>2025</option>
             <option value="2024">2024</option>
             <option value="2023">2023</option>
             <option value="2022">2022</option>
           </select>
         </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Preparer</label>
-          <input class="form-control" id="f-preparer" type="text" placeholder="e.g. Alex R.">
-        </div>
-        <div class="form-group">
-          <label>Reviewer</label>
-          <input class="form-control" id="f-reviewer" type="text" placeholder="e.g. Sam K.">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Stage</label>
-          <select class="form-control" id="f-stage">
+        <div class="form-field">
+          <label class="form-label">Stage</label>
+          <select class="form-select" id="f-stage">
             <option value="intake">Intake</option>
             <option value="organizer-sent">Organizer Sent</option>
-            <option value="waiting-docs">Waiting on Documents</option>
-            <option value="in-prep">In Preparation</option>
+            <option value="waiting-docs">Waiting Docs</option>
+            <option value="in-prep">In Prep</option>
             <option value="in-review">In Review</option>
-            <option value="waiting-sig">Waiting on Signature</option>
-            <option value="ready-to-file">Ready to File</option>
+            <option value="waiting-sig">Waiting Signature</option>
             <option value="filed">Filed</option>
             <option value="complete">Complete</option>
           </select>
         </div>
-        <div class="form-group">
-          <label>Exception Status</label>
-          <select class="form-control" id="f-exstatus">
-            <option value="">Active (none)</option>
-            <option value="missing-info">Missing Info</option>
-            <option value="on-extension">On Extension</option>
-            <option value="waiting-irs">Waiting on IRS</option>
-            <option value="waiting-state">Waiting on State</option>
-            <option value="on-hold">On Hold</option>
-            <option value="amendment">Amendment Needed</option>
-            <option value="payment-pending">Payment Pending</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Priority</label>
-          <select class="form-control" id="f-priority">
-            <option value="">None</option>
+        <div class="form-field">
+          <label class="form-label">Priority</label>
+          <select class="form-select" id="f-priority">
             <option value="High">High</option>
-            <option value="Medium">Medium</option>
+            <option value="Medium" selected>Medium</option>
             <option value="Low">Low</option>
           </select>
         </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Due Date</label>
-          <input class="form-control" id="f-due" type="date">
-        </div>
-        <div class="form-group">
-          <label>Extension Filed</label>
-          <select class="form-control" id="f-ext">
-            <option value="false">No</option>
-            <option value="true">Yes</option>
+        <div class="form-field">
+          <label class="form-label">Preparer</label>
+          <select class="form-select" id="f-preparer">
+            <option value="">—</option>
+            <option value="Conner">Conner</option>
+            <option value="Andrew">Andrew</option>
+            <option value="Kaitlyn">Kaitlyn</option>
+            <option value="Emily">Emily</option>
+            <option value="Brad">Brad</option>
+            <option value="Austin">Austin</option>
           </select>
         </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>EIN / SSN (last 4)</label>
-          <input class="form-control" id="f-ein" type="text" placeholder="e.g. 1234" maxlength="4">
+        <div class="form-field">
+          <label class="form-label">Reviewer</label>
+          <select class="form-select" id="f-reviewer">
+            <option value="">—</option>
+            <option value="Conner">Conner</option>
+            <option value="Andrew">Andrew</option>
+            <option value="Kaitlyn">Kaitlyn</option>
+            <option value="Emily">Emily</option>
+            <option value="Brad">Brad</option>
+            <option value="Austin">Austin</option>
+          </select>
         </div>
-        <div class="form-group">
-          <label>State</label>
-          <input class="form-control" id="f-state" type="text" placeholder="e.g. MN, CA" maxlength="2">
+        <div class="form-field">
+          <label class="form-label">State</label>
+          <input type="text" class="form-input" id="f-state" placeholder="MN" maxlength="2">
         </div>
-      </div>
-      <div class="form-group">
-        <label>Notes</label>
-        <textarea class="form-control" id="f-notes" placeholder="Any initial notes…"></textarea>
+        <div class="form-field">
+          <label class="form-label">Due Date</label>
+          <input type="date" class="form-input" id="f-due">
+        </div>
+        <div class="form-field">
+          <label class="form-label">Exception Status</label>
+          <select class="form-select" id="f-exStatus">
+            <option value="">None</option>
+            <option value="missing-info">Missing Info</option>
+            <option value="on-extension">On Extension</option>
+            <option value="amendment">Amendment</option>
+            <option value="on-hold">On Hold</option>
+            <option value="waiting-irs">Waiting IRS</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="form-label">&nbsp;</label>
+          <div class="form-check-row">
+            <input type="checkbox" class="form-check" id="f-extension">
+            <label class="form-check-label" for="f-extension">Extension filed</label>
+          </div>
+        </div>
+        <div class="form-field full">
+          <label class="form-label">Initial Note</label>
+          <textarea class="form-textarea" id="f-note" placeholder="Add a note about this return…"></textarea>
+        </div>
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeAddModal()">Cancel</button>
-      <button class="btn btn-danger" id="deleteBtn" onclick="deleteCurrentReturn()" style="display:none">Delete</button>
-      <button class="btn btn-primary" onclick="saveReturn()">Save Return</button>
+      <button class="btn btn-ghost" id="formCancel">Cancel</button>
+      <div style="flex:1"></div>
+      <button class="btn btn-primary" id="formSave">Save Return</button>
     </div>
   </div>
 </div>
 
-<!-- DETAIL MODAL -->
-<div class="modal-overlay" id="detailModal">
-  <div class="modal detail-modal">
-    <div class="modal-header">
-      <h2 id="detailTitle">Return Detail</h2>
-      <button class="modal-close" onclick="closeDetailModal()">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
-    <div id="detailStatusBar" class="detail-status-bar"></div>
-    <div id="detailGrid" class="detail-grid"></div>
-    <div class="notes-section">
-      <h3>Activity &amp; Notes</h3>
-      <div id="noteList" class="note-list"></div>
-      <div class="note-input-wrap">
-        <textarea class="form-control" id="noteInput" placeholder="Add a note…"></textarea>
-        <button class="btn btn-primary" onclick="addNote()" style="align-self:flex-end">Post</button>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeDetailModal()">Close</button>
-      <button class="btn btn-ghost" onclick="openEditFromDetail()">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-        Edit
-      </button>
+<!-- CONFIRM DIALOG -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <h3 id="confirmTitle">Delete Return?</h3>
+    <p id="confirmMsg">This action cannot be undone.</p>
+    <div class="confirm-btns">
+      <button class="btn btn-ghost" id="confirmCancel">Cancel</button>
+      <button class="btn btn-danger" id="confirmOk">Delete</button>
     </div>
   </div>
 </div>
 
-<!-- TOAST CONTAINER -->
-<div class="toast-container" id="toastContainer"></div>
+<!-- TOASTS -->
+<div class="toasts" id="toasts"></div>
 
 <script>
-// ─── DATA ───────────────────────────────────────────────────────────────────
-
-// Exception statuses — overlay a job without moving its pipeline stage (per TaxDome model)
-const EXCEPTION_STATUSES = [
-  { id: '',                label: 'Active',           color: 'var(--green)',  bg: 'var(--green-dim)' },
-  { id: 'missing-info',    label: 'Missing Info',     color: '#fbbf24',       bg: 'rgba(251,191,36,0.15)' },
-  { id: 'on-extension',    label: 'On Extension',     color: '#fb923c',       bg: 'rgba(251,146,60,0.15)' },
-  { id: 'waiting-irs',     label: 'Waiting on IRS',   color: '#a78bfa',       bg: 'rgba(167,139,250,0.15)' },
-  { id: 'waiting-state',   label: 'Waiting on State', color: '#60a5fa',       bg: 'rgba(96,165,250,0.15)' },
-  { id: 'on-hold',         label: 'On Hold',          color: '#f87171',       bg: 'rgba(248,113,113,0.15)' },
-  { id: 'amendment',       label: 'Amendment Needed', color: '#f472b6',       bg: 'rgba(244,114,182,0.15)' },
-  { id: 'payment-pending', label: 'Payment Pending',  color: '#34d399',       bg: 'rgba(52,211,153,0.15)' },
-];
-
-function exStatusById(id) { return EXCEPTION_STATUSES.find(s => s.id === (id||'')) || EXCEPTION_STATUSES[0]; }
+/* ─────────────────────────────────────────────
+   CONSTANTS & CONFIG
+───────────────────────────────────────────── */
+const STORAGE_KEY = 'track-pipeline-v2';
+const BANNER_DISMISS_KEY = 'track-banner-dismissed';
 
 const STAGES = [
-  { id: 'intake',         label: 'Intake',                 color: '#6b7280', colClass: 'col-intake' },
-  { id: 'organizer-sent', label: 'Organizer Sent',         color: '#60a5fa', colClass: 'col-organizer' },
-  { id: 'waiting-docs',   label: 'Waiting on Documents',   color: '#fbbf24', colClass: 'col-waiting-docs' },
-  { id: 'in-prep',        label: 'In Preparation',         color: '#a78bfa', colClass: 'col-in-prep' },
-  { id: 'in-review',      label: 'In Review',              color: '#fb923c', colClass: 'col-in-review' },
-  { id: 'waiting-sig',    label: 'Waiting on Signature',   color: '#f472b6', colClass: 'col-waiting-sig' },
-  { id: 'ready-to-file',  label: 'Ready to File',          color: '#6c72ff', colClass: 'col-ready' },
-  { id: 'filed',          label: 'Filed',                  color: '#34d399', colClass: 'col-filed' },
-  { id: 'complete',       label: 'Complete',               color: '#34d399', colClass: 'col-complete' },
+  { id: 'intake',          label: 'Intake',          short: 'INT' },
+  { id: 'organizer-sent',  label: 'Organizer Sent',  short: 'ORG' },
+  { id: 'waiting-docs',    label: 'Waiting Docs',    short: 'DOC' },
+  { id: 'in-prep',         label: 'In Prep',         short: 'PRP' },
+  { id: 'in-review',       label: 'In Review',       short: 'REV' },
+  { id: 'waiting-sig',     label: 'Waiting Sig',     short: 'SIG' },
+  { id: 'filed',           label: 'Filed',           short: 'FLD' },
+  { id: 'complete',        label: 'Complete',        short: 'CPL' },
 ];
 
-const TYPE_COLORS = {
-  '1040': 'type-1040', '1040-NR': 'type-1040nr',
-  '1120S': 'type-1120s', '1120': 'type-1120',
-  '1065': 'type-1065', '1041': 'type-1041', '990': 'type-990'
+const STAGE_COLORS = {
+  'intake':          '#7b7fa8',
+  'organizer-sent':  '#9b6ef0',
+  'waiting-docs':    '#e07840',
+  'in-prep':         '#4fa8e8',
+  'in-review':       '#e8a020',
+  'waiting-sig':     '#d45fa8',
+  'filed':           '#22c97a',
+  'complete':        '#4a4d6a',
 };
 
-const PRIORITY_COLORS = { High: 'priority-high', Medium: 'priority-med', Low: 'priority-low', '': 'priority-none' };
+const EX_LABELS = {
+  'missing-info':  'Missing Info',
+  'on-extension':  'On Extension',
+  'amendment':     'Amendment',
+  'on-hold':       'On Hold',
+  'waiting-irs':   'Waiting IRS',
+};
 
-let returns = loadData();
+const TEAM = ['', 'Conner', 'Andrew', 'Kaitlyn', 'Emily', 'Brad', 'Austin'];
+
+/* ─────────────────────────────────────────────
+   SEED DATA
+───────────────────────────────────────────── */
+const SEED = [
+  { client:'Silberman, Stuart & Nadia', email:'', type:'1040', year:'2025', stage:'waiting-sig', exStatus:'', preparer:'Conner', reviewer:'Conner', priority:'High', dueDate:'2026-10-15', extension:true, state:'MN', notes:['Draft sent — Stu flagged possible Schwab account inclusion error (father-in-law acct ending). Awaiting confirmation before final sign-off.'] },
+  { client:'Moscardon, Marilou', email:'', type:'1040', year:'2025', stage:'waiting-sig', exStatus:'on-extension', preparer:'Conner', reviewer:'Conner', priority:'High', dueDate:'2026-10-15', extension:true, state:'CA', notes:['Draft sent to TaxDome. Need to confirm: $5,000 Federal and $3,500 CA extension payments were made. Client reviewing video summary.'] },
+  { client:'Donovan', email:'', type:'1040', year:'2025', stage:'waiting-sig', exStatus:'', preparer:'Conner', reviewer:'Conner', priority:'High', dueDate:'2026-10-15', extension:true, state:'MN', notes:['Return ready. Met with Jimmy and Rick on 2026 plan. Conner wants to do quick call before final filing. Client replied ready to connect.'] },
+  { client:'Swars, Bill & Eun (esp211)', email:'', type:'1040', year:'2025', stage:'in-review', exStatus:'', preparer:'Conner', reviewer:'Conner', priority:'High', dueDate:'2026-10-15', extension:true, state:'CA', notes:['Complex multi-state: left CA 8/27/24, using sister\'s GA address as mailing address, no GA residency established. No Goldman interest. Greek tax preparer waiting on US return. Follow up needed.'] },
+  { client:'Duncan Family', email:'', type:'1040', year:'2025', stage:'in-prep', exStatus:'missing-info', preparer:'Andrew', reviewer:'Conner', priority:'High', dueDate:'2026-10-15', extension:true, state:'MN', notes:['Need quarterly breakdown of $921,571 estimated tax payment (only one figure received from Moment Private Wealth on Apr 8). Jacob at Moment requested breakdown. Andrew following up.'] },
+  { client:'Majid, Nadia & Stu', email:'', type:'1040', year:'2025', stage:'in-review', exStatus:'', preparer:'Conner', reviewer:'Conner', priority:'Medium', dueDate:'2026-10-15', extension:true, state:'MN', notes:['Amended return allocation finalized. Daffy donation treated as fully Nadia\'s. Discussion about withholding changes for 2026.'] },
+  { client:'Danner, Kyle', email:'', type:'1040', year:'2025', stage:'in-prep', exStatus:'', preparer:'Andrew', reviewer:'Conner', priority:'Medium', dueDate:'2026-10-15', extension:true, state:'MN', notes:['Organizer & doc reminder sent. 401k contribution question: $23,500 already contributed, need to determine employer contribution allowance and 2025 treatment.'] },
+  { client:'McNeil, Mitchell W & Lissa', email:'', type:'1040', year:'2025', stage:'waiting-docs', exStatus:'', preparer:'Conner', reviewer:'Conner', priority:'Medium', dueDate:'2026-10-15', extension:true, state:'MN', notes:['Lissa uploaded 2025 return docs on 6/19. Awaiting review.'] },
+  { client:'Scherer, Daniel', email:'', type:'1040', year:'2025', stage:'filed', exStatus:'waiting-irs', preparer:'Conner', reviewer:'Conner', priority:'Medium', dueDate:'2026-04-15', extension:false, state:'MN', notes:['Filed. Refund not received — IRS response expected 1–3 months. Case submitted to TaxDome. Client notified.'] },
+  { client:'Oliver, G', email:'', type:'1040', year:'2025', stage:'filed', exStatus:'', preparer:'Kaitlyn', reviewer:'Conner', priority:'Low', dueDate:'2026-04-15', extension:false, state:'MN', notes:['Filed 5/7. Awaiting IRS acceptance confirmation — typically 1 day. Mike\'s return security questions reset for co-signing.'] },
+  { client:'Lombardo, T', email:'', type:'1040', year:'2025', stage:'complete', exStatus:'', preparer:'Conner', reviewer:'Conner', priority:'Low', dueDate:'2026-04-15', extension:false, state:'MN', notes:['Filed. Balance due ~$18k to IRS and state. Client concerned about withholding. Copy sent to Josh.'] },
+  { client:'de Chaffin, Ries', email:'', type:'1040', year:'2025', stage:'waiting-docs', exStatus:'missing-info', preparer:'Conner', reviewer:'Conner', priority:'Medium', dueDate:'2026-10-15', extension:true, state:'MN', notes:['Vehicle fees — client says not worth finding. Excel sheet from previous preparer not available. Waiting on what remains.'] },
+  { client:'Haas, Rodney', email:'', type:'1040', year:'2025', stage:'organizer-sent', exStatus:'missing-info', preparer:'Conner', reviewer:'Conner', priority:'High', dueDate:'2026-10-15', extension:true, state:'MN', notes:['Kick-off sent 3/31. Rod emailed 6/20 saying he hasn\'t heard anything. Needs immediate follow-up call.'] },
+  { client:'Becker, P', email:'', type:'1040', year:'2025', stage:'in-prep', exStatus:'', preparer:'Conner', reviewer:'Conner', priority:'Medium', dueDate:'2026-10-15', extension:true, state:'', notes:['FBAR accepted 6/20. Client forwarded tax prep kick-off asking for update on preparation status.'] },
+  { client:'Swars, Bill (swarsb)', email:'', type:'1040', year:'2025', stage:'waiting-sig', exStatus:'', preparer:'Conner', reviewer:'Conner', priority:'Medium', dueDate:'2026-10-15', extension:true, state:'TN', notes:['Return uploaded to TaxDome. Client wants to review before signing. Georgia state non-resident withholding error by wife\'s employer on first paycheck — addressed.'] },
+  { client:'Ness', email:'', type:'1040', year:'2025', stage:'waiting-docs', exStatus:'missing-info', preparer:'Andrew', reviewer:'Conner', priority:'Low', dueDate:'2026-10-15', extension:true, state:'MN', notes:['Waiting on 2025 payroll setup to be completed accurately before return can be prepared.'] },
+  { client:'Nolan, Nadia', email:'', type:'1040', year:'2025', stage:'waiting-docs', exStatus:'', preparer:'Conner', reviewer:'Conner', priority:'Medium', dueDate:'2026-10-15', extension:true, state:'MN', notes:['New client intro. Sent ISO sell-to-cover, NQ same-day sale, and other docs on 6/12.'] },
+  { client:'Sercombe, Clare', email:'', type:'1040', year:'2025', stage:'intake', exStatus:'', preparer:'Conner', reviewer:'', priority:'Low', dueDate:'2026-10-15', extension:false, state:'MN', notes:['Meeting scheduled via Ping. Goal: review retirement cashflow, tax history, account balances, tax-efficient withdrawal and Roth conversion strategy.'] },
+  { client:'Kirkpatrick', email:'', type:'1040', year:'2025', stage:'intake', exStatus:'', preparer:'Andrew', reviewer:'Conner', priority:'Low', dueDate:'2026-10-15', extension:false, state:'MN', notes:['Quote sent: $7,500 total ($700 personal return + $3,400 business). Awaiting engagement.'] },
+  { client:'Cohen', email:'', type:'1040', year:'2025', stage:'in-prep', exStatus:'amendment', preparer:'Conner', reviewer:'Conner', priority:'Medium', dueDate:'2026-10-15', extension:false, state:'NY', notes:['Amended return needed. Fee: $800. Need 2025 tax info: Altruist 1099 and backdoor Roth confirmation. TJ helping with Altruist.'] },
+  { client:'Riechers', email:'', type:'1120S', year:'2025', stage:'waiting-docs', exStatus:'', preparer:'Andrew', reviewer:'Conner', priority:'Medium', dueDate:'2026-10-15', extension:true, state:'MN', notes:['Need to complete 2025 bookkeeping before business return can be prepared. Andrew following up to keep momentum going.'] },
+  { client:'Hill, Ty Gregory', email:'', type:'1040', year:'2025', stage:'organizer-sent', exStatus:'', preparer:'Emily', reviewer:'Conner', priority:'Low', dueDate:'2026-10-15', extension:false, state:'MN', notes:['Account was deactivated — Emily reactivated 6/15. Client received kick-off email. Uploaded 2024 return link resent.'] },
+  { client:'Mapstone, Jarrad', email:'', type:'1040', year:'2023', stage:'filed', exStatus:'waiting-irs', preparer:'Conner', reviewer:'Conner', priority:'Low', dueDate:'2025-10-15', extension:true, state:'', notes:['Amended returns 2021/2022/2023. IRS very slow. Jarrad called IRS 10/3 — still processing. Waiting on IRS response.'] },
+  { client:'Basin, K', email:'', type:'1040', year:'2025', stage:'in-prep', exStatus:'', preparer:'Andrew', reviewer:'Conner', priority:'Medium', dueDate:'2026-10-15', extension:true, state:'MN', notes:['Q2 estimated tax payments discussion. Determining sale allocation (pro-rata). Working through overpayment withdrawal questions.'] },
+];
+
+/* ─────────────────────────────────────────────
+   STATE
+───────────────────────────────────────────── */
+let returns = [];
 let editingId = null;
-let detailId = null;
-let listSortKey = 'client';
-let listSortDir = 1;
 let currentView = 'kanban';
+let filters = { search:'', type:'', preparer:'', priority:'', exStatus:'', stat:'' };
+let sortCol = 'client';
+let sortDir = 'asc';
+let collapsedCols = {};
+let detailId = null;
+let activeTab = 'details';
+let dragId = null;
+let dragOverCol = null;
 
-// ─── SEED DATA ──────────────────────────────────────────────────────────────
-
-function seedData() {
-  return [
-    { id: uid(), client: 'Anderson, Mark & Lisa', type: '1040', year: '2025', stage: 'in-prep', exStatus: '', preparer: 'Alex R.', reviewer: 'Sam K.', priority: 'High', dueDate: '2026-04-15', extension: false, ein: '4821', state: 'MN', notes: [], created: Date.now() - 86400000*5 },
-    { id: uid(), client: 'Sunrise Tech LLC', type: '1120S', year: '2025', stage: 'waiting-docs', exStatus: 'missing-info', preparer: 'Jordan M.', reviewer: 'Sam K.', priority: 'Medium', dueDate: '2026-03-17', extension: false, ein: '7734', state: 'MN', notes: [{ text: 'Waiting on K-1s from partner entity', author: 'Jordan M.', ts: Date.now() - 86400000*2 }], created: Date.now() - 86400000*10 },
-    { id: uid(), client: 'Kowalski, Patricia', type: '1040', year: '2025', stage: 'organizer-sent', exStatus: '', preparer: 'Alex R.', reviewer: '', priority: 'Low', dueDate: '2026-04-15', extension: false, ein: '3390', state: 'WI', notes: [], created: Date.now() - 86400000*3 },
-    { id: uid(), client: 'Blue River Partners', type: '1065', year: '2025', stage: 'in-review', exStatus: '', preparer: 'Chris T.', reviewer: 'Sam K.', priority: 'High', dueDate: '2026-03-17', extension: false, ein: '9912', state: 'MN', notes: [{ text: 'Reviewer notes: check depreciation schedule on asset 14', author: 'Sam K.', ts: Date.now() - 3600000 }], created: Date.now() - 86400000*14 },
-    { id: uid(), client: 'Hernandez, Carlos', type: '1040-NR', year: '2025', stage: 'intake', exStatus: '', preparer: '', reviewer: '', priority: '', dueDate: '2026-06-15', extension: false, ein: '2201', state: 'CA', notes: [], created: Date.now() - 86400000*1 },
-    { id: uid(), client: 'Oakwood Family Trust', type: '1041', year: '2025', stage: 'waiting-sig', exStatus: '', preparer: 'Jordan M.', reviewer: 'Sam K.', priority: 'Medium', dueDate: '2026-04-15', extension: true, ein: '5567', state: 'MN', notes: [{ text: 'E-sign sent via TaxDome portal', author: 'Jordan M.', ts: Date.now() - 86400000 }], created: Date.now() - 86400000*20 },
-    { id: uid(), client: 'Chen, Wei & Min', type: '1040', year: '2025', stage: 'filed', exStatus: '', preparer: 'Alex R.', reviewer: 'Sam K.', priority: 'Low', dueDate: '2026-04-15', extension: false, ein: '8843', state: 'MN', notes: [{ text: 'Filed 3/10 — federal & MN accepted', author: 'Alex R.', ts: Date.now() - 86400000*4 }], created: Date.now() - 86400000*30 },
-    { id: uid(), client: 'Northstar Nonprofit Inc.', type: '990', year: '2025', stage: 'ready-to-file', exStatus: '', preparer: 'Chris T.', reviewer: 'Sam K.', priority: 'Medium', dueDate: '2026-05-15', extension: false, ein: '4401', state: 'MN', notes: [], created: Date.now() - 86400000*7 },
-    { id: uid(), client: 'Roberts, David', type: '1040', year: '2024', stage: 'complete', exStatus: '', preparer: 'Alex R.', reviewer: 'Sam K.', priority: '', dueDate: '2025-10-15', extension: true, ein: '1122', state: 'MN', notes: [{ text: 'Extension filed, return complete. Final copy sent.', author: 'Alex R.', ts: Date.now() - 86400000*60 }], created: Date.now() - 86400000*90 },
-    { id: uid(), client: 'Meridian Corp', type: '1120', year: '2025', stage: 'in-prep', exStatus: 'on-hold', preparer: 'Jordan M.', reviewer: 'Sam K.', priority: 'High', dueDate: '2026-04-15', extension: false, ein: '6678', state: 'IL', notes: [{ text: 'Client on hold pending audit resolution', author: 'Jordan M.', ts: Date.now() - 86400000*2 }], created: Date.now() - 86400000*6 },
-  ];
+/* ─────────────────────────────────────────────
+   HELPERS
+───────────────────────────────────────────── */
+function uid() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
 }
 
-// ─── PERSISTENCE ────────────────────────────────────────────────────────────
-
-function loadData() {
-  try {
-    const raw = localStorage.getItem('track-pipeline-v1');
-    if (raw) return JSON.parse(raw);
-  } catch(e) {}
-  const d = seedData();
-  saveData(d);
-  return d;
+function today() {
+  return new Date().toISOString().split('T')[0];
 }
-
-function saveData(data) {
-  localStorage.setItem('track-pipeline-v1', JSON.stringify(data || returns));
-}
-
-// ─── UTILITIES ──────────────────────────────────────────────────────────────
-
-function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
-
-function stageById(id) { return STAGES.find(s => s.id === id) || STAGES[0]; }
 
 function formatDate(d) {
   if (!d) return '—';
@@ -988,499 +985,873 @@ function formatDate(d) {
   return `${months[+m-1]} ${+day}, ${y}`;
 }
 
-function dueClass(dateStr) {
-  if (!dateStr) return '';
-  const now = new Date(); now.setHours(0,0,0,0);
-  const due = new Date(dateStr + 'T00:00:00');
-  const diff = (due - now) / 86400000;
-  if (diff < 0) return 'overdue';
-  if (diff <= 7) return 'soon';
-  return '';
+function dateDueSoon(d) {
+  if (!d) return false;
+  const diff = (new Date(d) - new Date()) / 86400000;
+  return diff >= 0 && diff <= 30;
+}
+
+function dateOverdue(d) {
+  if (!d) return false;
+  return new Date(d) < new Date();
 }
 
 function initials(name) {
   if (!name) return '?';
-  return name.split(/\s+/).map(w => w[0]).join('').slice(0,2).toUpperCase();
+  const words = name.trim().split(' ');
+  if (words.length === 1) return words[0].slice(0,2).toUpperCase();
+  return (words[0][0] + words[words.length-1][0]).toUpperCase();
 }
 
-function getPreparers() {
-  const s = new Set();
-  returns.forEach(r => { if (r.preparer) s.add(r.preparer); });
-  return [...s].sort();
+function nextStage(currentId) {
+  const idx = STAGES.findIndex(s => s.id === currentId);
+  if (idx < 0 || idx >= STAGES.length - 1) return null;
+  return STAGES[idx + 1].id;
 }
 
-function applyFilters() {
-  const q = document.getElementById('searchInput').value.toLowerCase();
-  const type = document.getElementById('typeFilter').value;
-  const prep = document.getElementById('preparerFilter').value;
-  const pri = document.getElementById('priorityFilter').value;
-  const year = document.getElementById('yearFilter').value;
-  const exSt = document.getElementById('exStatusFilter').value;
-  const filtered = returns.filter(r => {
-    if (q && !r.client.toLowerCase().includes(q)) return false;
-    if (type && r.type !== type) return false;
-    if (prep && r.preparer !== prep) return false;
-    if (pri && r.priority !== pri) return false;
-    if (year && r.year !== year) return false;
-    if (exSt !== '' && (r.exStatus || '') !== exSt) return false;
-    return true;
-  });
-  if (currentView === 'kanban') renderBoard(filtered);
-  else renderList(filtered);
-  renderStats(filtered);
+function stageLabel(id) {
+  return STAGES.find(s => s.id === id)?.label || id;
 }
 
-// ─── RENDER: STATS ───────────────────────────────────────────────────────────
-
-function renderStats(data) {
-  const bar = document.getElementById('statsBar');
-  const total = data.length;
-  const filed = data.filter(r => r.stage === 'filed' || r.stage === 'complete').length;
-  const overdue = data.filter(r => dueClass(r.dueDate) === 'overdue' && r.stage !== 'filed' && r.stage !== 'complete').length;
-  const inProg = data.filter(r => ['in-prep','in-review'].includes(r.stage)).length;
-  const waiting = data.filter(r => ['waiting-docs','waiting-sig'].includes(r.stage)).length;
-
-  bar.innerHTML = `
-    <div class="stat-chip">
-      <span class="dot" style="background:#6b7280"></span>
-      <div><div class="label">Total</div><div class="val">${total}</div></div>
-    </div>
-    <div class="stat-chip">
-      <span class="dot" style="background:#a78bfa"></span>
-      <div><div class="label">In Progress</div><div class="val">${inProg}</div></div>
-    </div>
-    <div class="stat-chip">
-      <span class="dot" style="background:#fbbf24"></span>
-      <div><div class="label">Waiting</div><div class="val">${waiting}</div></div>
-    </div>
-    <div class="stat-chip">
-      <span class="dot" style="background:#34d399"></span>
-      <div><div class="label">Filed</div><div class="val">${filed}</div></div>
-    </div>
-    <div class="stat-chip">
-      <span class="dot" style="background:#f87171"></span>
-      <div><div class="label">Overdue</div><div class="val" style="color:${overdue>0?'var(--red)':'var(--text)'}">${overdue}</div></div>
-    </div>
-  `;
+function exLabel(id) {
+  return EX_LABELS[id] || '';
 }
 
-// ─── RENDER: KANBAN ───────────────────────────────────────────────────────────
+function save() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(returns));
+}
 
-function renderBoard(data) {
-  const board = document.getElementById('board');
-  board.innerHTML = '';
-
-  // Update preparer filter options
-  const prepSel = document.getElementById('preparerFilter');
-  const curPrep = prepSel.value;
-  prepSel.innerHTML = '<option value="">All Preparers</option>';
-  getPreparers().forEach(p => {
-    const o = document.createElement('option');
-    o.value = p; o.textContent = p;
-    if (p === curPrep) o.selected = true;
-    prepSel.appendChild(o);
-  });
-
-  STAGES.forEach(stage => {
-    const cards = data.filter(r => r.stage === stage.id);
-    const col = document.createElement('div');
-    col.className = `column ${stage.colClass}`;
-    col.dataset.stage = stage.id;
-    col.addEventListener('dragover', e => { e.preventDefault(); col.classList.add('drag-over'); });
-    col.addEventListener('dragleave', () => col.classList.remove('drag-over'));
-    col.addEventListener('drop', e => {
-      e.preventDefault();
-      col.classList.remove('drag-over');
-      const id = e.dataTransfer.getData('text/plain');
-      const ret = returns.find(r => r.id === id);
-      if (ret && ret.stage !== stage.id) {
-        const prevStage = ret.stage;
-        ret.stage = stage.id;
-        ret.notes.push({ text: `Status changed: ${stageById(prevStage).label} → ${stage.label}`, author: 'System', ts: Date.now() });
-        saveData();
-        applyFilters();
-        toast(`Moved to "${stage.label}"`);
+function load() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        returns = parsed;
+        return;
       }
-    });
-
-    col.innerHTML = `
-      <div class="column-header">
-        <span class="column-dot" style="background:${stage.color}"></span>
-        <span class="column-title">${stage.label}</span>
-        <span class="column-count">${cards.length}</span>
-      </div>
-      <div class="column-cards" id="col-${stage.id}"></div>
-    `;
-    board.appendChild(col);
-
-    const cardsContainer = col.querySelector('.column-cards');
-    if (cards.length === 0) {
-      const empty = document.createElement('div');
-      empty.className = 'empty-col';
-      empty.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add`;
-      empty.onclick = () => openAddModal(stage.id);
-      cardsContainer.appendChild(empty);
-    } else {
-      cards.forEach(r => cardsContainer.appendChild(buildCard(r)));
     }
+  } catch(e) {}
+  // seed
+  returns = SEED.map(r => ({
+    ...r,
+    id: uid(),
+    createdAt: new Date().toISOString(),
+    activity: [
+      { type: 'create', text: 'Return added to pipeline.', ts: new Date().toISOString() },
+      ...(r.notes || []).map(n => ({ type: 'note', text: n, ts: new Date().toISOString() }))
+    ],
+  }));
+  save();
+}
+
+function toast(msg, type='info') {
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.textContent = msg;
+  document.getElementById('toasts').appendChild(el);
+  setTimeout(() => el.remove(), 3500);
+}
+
+/* ─────────────────────────────────────────────
+   FILTERS
+───────────────────────────────────────────── */
+function filteredReturns() {
+  let r = returns;
+  const yr = document.getElementById('yearFilter').value;
+  if (yr) r = r.filter(x => x.year === yr);
+  if (filters.search) {
+    const q = filters.search.toLowerCase();
+    r = r.filter(x =>
+      x.client.toLowerCase().includes(q) ||
+      (x.notes||[]).some(n => n.toLowerCase().includes(q)) ||
+      (x.state||'').toLowerCase().includes(q) ||
+      (x.preparer||'').toLowerCase().includes(q)
+    );
+  }
+  if (filters.type) r = r.filter(x => x.type === filters.type);
+  if (filters.preparer) r = r.filter(x => x.preparer === filters.preparer);
+  if (filters.priority) r = r.filter(x => x.priority === filters.priority);
+  if (filters.exStatus) r = r.filter(x => x.exStatus === filters.exStatus);
+  if (filters.stat) {
+    if (filters.stat === 'in-progress') r = r.filter(x => ['in-prep','in-review'].includes(x.stage));
+    else if (filters.stat === 'waiting-client') r = r.filter(x => ['waiting-docs','waiting-sig','organizer-sent'].includes(x.stage));
+    else if (filters.stat === 'waiting-irs') r = r.filter(x => x.exStatus === 'waiting-irs' || x.stage === 'filed');
+    else if (filters.stat === 'filed') r = r.filter(x => x.stage === 'filed');
+    else if (filters.stat === 'complete') r = r.filter(x => x.stage === 'complete');
+  }
+  return r;
+}
+
+function filterByStat(stat) {
+  filters.stat = filters.stat === stat ? '' : stat;
+  document.querySelectorAll('.stat-cell').forEach(el => {
+    el.classList.toggle('active', el.dataset.stat === filters.stat);
+  });
+  render();
+}
+
+/* ─────────────────────────────────────────────
+   STATS
+───────────────────────────────────────────── */
+function updateStats() {
+  const yr = document.getElementById('yearFilter').value;
+  let r = yr ? returns.filter(x => x.year === yr) : returns;
+  document.getElementById('sStat').textContent = r.length;
+  document.getElementById('ipStat').textContent = r.filter(x => ['in-prep','in-review'].includes(x.stage)).length;
+  document.getElementById('wcStat').textContent = r.filter(x => ['waiting-docs','waiting-sig','organizer-sent'].includes(x.stage)).length;
+  document.getElementById('wiStat').textContent = r.filter(x => x.exStatus === 'waiting-irs' || x.stage === 'filed').length;
+  document.getElementById('filStat').textContent = r.filter(x => x.stage === 'filed').length;
+  document.getElementById('compStat').textContent = r.filter(x => x.stage === 'complete').length;
+  document.getElementById('totalCountNav').textContent = r.length;
+}
+
+/* ─────────────────────────────────────────────
+   ATTENTION BANNER
+───────────────────────────────────────────── */
+function updateBanner() {
+  if (sessionStorage.getItem(BANNER_DISMISS_KEY)) {
+    document.getElementById('attentionBanner').classList.add('hidden');
+    return;
+  }
+  const yr = document.getElementById('yearFilter').value;
+  let r = yr ? returns.filter(x => x.year === yr) : returns;
+  const attn = r.filter(x =>
+    x.exStatus === 'missing-info' ||
+    x.exStatus === 'on-hold' ||
+    (x.priority === 'High' && ['organizer-sent','waiting-docs'].includes(x.stage))
+  );
+  const banner = document.getElementById('attentionBanner');
+  if (!attn.length) { banner.classList.add('hidden'); return; }
+  banner.classList.remove('hidden');
+  document.getElementById('bannerLabel').textContent = `${attn.length} return${attn.length>1?'s':''} need${attn.length===1?'s':''} attention:`;
+  const chips = document.getElementById('bannerChips');
+  chips.innerHTML = '';
+  attn.forEach(x => {
+    const chip = document.createElement('span');
+    chip.className = 'banner-chip' + (x.exStatus === 'missing-info' || x.exStatus === 'on-hold' ? ' red-chip' : '');
+    chip.textContent = x.client;
+    chip.onclick = () => openDetail(x.id);
+    chips.appendChild(chip);
   });
 }
 
-function buildCard(r) {
-  const card = document.createElement('div');
-  card.className = 'card';
-  card.dataset.id = r.id;
-  card.draggable = true;
-  card.addEventListener('dragstart', e => {
-    e.dataTransfer.setData('text/plain', r.id);
-    card.classList.add('dragging');
+document.getElementById('bannerDismiss').onclick = () => {
+  sessionStorage.setItem(BANNER_DISMISS_KEY, '1');
+  document.getElementById('attentionBanner').classList.add('hidden');
+};
+
+/* ─────────────────────────────────────────────
+   CARD HTML
+───────────────────────────────────────────── */
+function cardHtml(r) {
+  const dueCls = dateOverdue(r.dueDate) ? 'overdue' : dateDueSoon(r.dueDate) ? 'soon' : '';
+  const noteCount = (r.activity||[]).filter(a=>a.type==='note').length;
+  const stageColor = STAGE_COLORS[r.stage] || '#7b7fa8';
+
+  let metaTags = '';
+  if (r.year) metaTags += `<span class="meta-tag meta-year">${r.year}</span>`;
+  if (r.state) metaTags += `<span class="meta-tag meta-state">${r.state}</span>`;
+  if (r.extension) metaTags += `<span class="meta-tag meta-ext">EXT</span>`;
+  if (r.exStatus) {
+    const cls = {
+      'missing-info':'ex-missing','on-extension':'ex-on-ext',
+      'amendment':'ex-amend','on-hold':'ex-on-hold','waiting-irs':'ex-waiting-irs'
+    }[r.exStatus]||'';
+    metaTags += `<span class="meta-tag ex-tag ${cls}">${exLabel(r.exStatus)}</span>`;
+  }
+
+  const prCls = r.priority === 'High' ? 'p-high' : r.priority === 'Medium' ? 'p-medium' : 'p-low';
+  const typeCls = `type-${r.type.toLowerCase().replace(/[^a-z0-9]/g,'')}`;
+
+  const ns = nextStage(r.stage);
+
+  return `
+    <div class="card" data-id="${r.id}" style="--col-color:${stageColor}"
+         draggable="true"
+         onclick="handleCardClick(event,'${r.id}')"
+         ondragstart="onDragStart(event,'${r.id}')"
+         ondragend="onDragEnd(event)">
+      <div class="card-main">
+        <div class="card-top">
+          <span class="type-badge ${typeCls}">${r.type}</span>
+          <span class="card-name" title="${r.client}">${r.client}</span>
+        </div>
+        <div class="card-meta">${metaTags}</div>
+        <div class="card-footer">
+          <div class="priority-dot ${prCls}" title="${r.priority} priority"></div>
+          <span class="card-due ${dueCls}">${formatDate(r.dueDate)}</span>
+          ${noteCount ? `<span class="card-note-count">&#128221; ${noteCount}</span>` : ''}
+          <div style="flex:1"></div>
+          <div class="preparer-avatar" title="${r.preparer||'Unassigned'}">${r.preparer ? r.preparer.slice(0,2).toUpperCase() : '?'}</div>
+        </div>
+      </div>
+      <div class="card-actions">
+        ${ns ? `<button class="card-action-btn next-stage" onclick="advanceStage(event,'${r.id}')">&#8594; ${stageLabel(ns)}</button>` : ''}
+        <button class="card-action-btn" onclick="openDetailTab(event,'${r.id}','activity')">&#128221; Note</button>
+        <button class="card-action-btn" onclick="openEdit(event,'${r.id}')">&#9998; Edit</button>
+      </div>
+    </div>`;
+}
+
+/* ─────────────────────────────────────────────
+   KANBAN RENDER
+───────────────────────────────────────────── */
+function renderKanban() {
+  const filtered = filteredReturns();
+  const byStage = {};
+  STAGES.forEach(s => { byStage[s.id] = []; });
+  filtered.forEach(r => {
+    if (byStage[r.stage]) byStage[r.stage].push(r);
+    else byStage['intake'] = byStage['intake'] || [];
   });
-  card.addEventListener('dragend', () => card.classList.remove('dragging'));
-  card.onclick = () => openDetail(r.id);
 
-  const dc = dueClass(r.dueDate);
-  const extTag = r.extension ? `<span class="extension-tag">EXT</span>` : '';
-  const noteCount = r.notes.filter(n => n.author !== 'System').length;
-  const exSt = exStatusById(r.exStatus || '');
-  const exTag = r.exStatus ? `<div class="ex-status-tag" style="background:${exSt.bg};color:${exSt.color}">${exSt.label}</div>` : '';
+  let html = '<div class="kanban-wrapper" id="kanbanWrapper">';
+  STAGES.forEach(s => {
+    const cards = byStage[s.id] || [];
+    const collapsed = collapsedCols[s.id] ? 'collapsed' : '';
+    const color = STAGE_COLORS[s.id] || '#7b7fa8';
+    html += `
+      <div class="kanban-col col-${s.id} ${collapsed}" id="col-${s.id}"
+           ondragover="onDragOver(event,'${s.id}')"
+           ondragleave="onDragLeave(event,'${s.id}')"
+           ondrop="onDrop(event,'${s.id}')">
+        <div class="col-header" onclick="toggleColCollapse('${s.id}')">
+          <div class="col-dot" style="background:${color}"></div>
+          <span class="col-title">${s.label}</span>
+          <span class="col-count">${cards.length}</span>
+          <span class="col-collapse-btn">&#8963;</span>
+        </div>
+        <div class="col-body" id="body-${s.id}">
+          ${cards.length === 0 ? '<div class="empty-col">No returns</div>' : ''}
+          ${cards.map(r => cardHtml(r)).join('')}
+        </div>
+      </div>`;
+  });
+  html += '</div>';
+  document.getElementById('viewArea').innerHTML = html;
+}
 
-  card.innerHTML = `
-    <div class="card-top">
-      <span class="card-type-badge ${TYPE_COLORS[r.type] || ''}">${r.type}</span>
-      <span class="card-client">${r.client}</span>
+function toggleColCollapse(stageId) {
+  collapsedCols[stageId] = !collapsedCols[stageId];
+  renderKanban();
+}
+
+/* ─────────────────────────────────────────────
+   LIST RENDER
+───────────────────────────────────────────── */
+function renderList() {
+  let filtered = filteredReturns();
+
+  // sort
+  filtered = filtered.slice().sort((a, b) => {
+    let av = a[sortCol] || '';
+    let bv = b[sortCol] || '';
+    if (typeof av === 'string') av = av.toLowerCase();
+    if (typeof bv === 'string') bv = bv.toLowerCase();
+    if (av < bv) return sortDir === 'asc' ? -1 : 1;
+    if (av > bv) return sortDir === 'asc' ? 1 : -1;
+    return 0;
+  });
+
+  const cols = [
+    { key:'client',   label:'Client' },
+    { key:'type',     label:'Type' },
+    { key:'year',     label:'Year' },
+    { key:'stage',    label:'Stage' },
+    { key:'exStatus', label:'Exception' },
+    { key:'priority', label:'Priority' },
+    { key:'preparer', label:'Preparer' },
+    { key:'dueDate',  label:'Due Date' },
+    { key:'state',    label:'State' },
+  ];
+
+  let html = `<div class="list-view"><table class="list-table"><thead><tr>`;
+  cols.forEach(c => {
+    const cls = sortCol === c.key ? (sortDir === 'asc' ? 'sorted-asc' : 'sorted-desc') : '';
+    html += `<th class="${cls}" onclick="sortBy('${c.key}')">${c.label}</th>`;
+  });
+  html += '</tr></thead><tbody>';
+
+  if (!filtered.length) {
+    html += `<tr><td colspan="${cols.length}" style="text-align:center;padding:40px;color:var(--text-muted)">No returns match the current filters.</td></tr>`;
+  }
+
+  filtered.forEach(r => {
+    const stageColor = STAGE_COLORS[r.stage] || '#7b7fa8';
+    const dueCls = dateOverdue(r.dueDate) ? 'overdue' : dateDueSoon(r.dueDate) ? 'soon' : '';
+    const prCls = r.priority === 'High' ? 'p-high' : r.priority === 'Medium' ? 'p-medium' : 'p-low';
+    const exHtml = r.exStatus ? `<span class="meta-tag ex-tag ${getExCls(r.exStatus)}">${exLabel(r.exStatus)}</span>` : '<span style="color:var(--text-dim)">—</span>';
+    html += `
+      <tr class="list-row" onclick="openDetail('${r.id}')">
+        <td><span class="list-client-name">${r.client}</span></td>
+        <td><span class="type-badge type-${r.type.toLowerCase().replace(/[^a-z0-9]/g,'')}">${r.type}</span></td>
+        <td style="color:var(--text-muted)">${r.year}</td>
+        <td><span class="stage-pill" style="background:${stageColor}22;color:${stageColor};border:1px solid ${stageColor}44"><span style="width:6px;height:6px;border-radius:50%;background:${stageColor};display:inline-block"></span>${stageLabel(r.stage)}</span></td>
+        <td>${exHtml}</td>
+        <td><span style="display:flex;align-items:center;gap:5px"><span class="priority-dot ${prCls}"></span>${r.priority}</span></td>
+        <td style="color:var(--text-muted)">${r.preparer || '—'}</td>
+        <td class="list-due ${dueCls}">${formatDate(r.dueDate)}</td>
+        <td style="color:var(--text-muted)">${r.state || '—'}</td>
+      </tr>`;
+  });
+
+  html += '</tbody></table></div>';
+  document.getElementById('viewArea').innerHTML = html;
+}
+
+function getExCls(ex) {
+  return {
+    'missing-info':'ex-missing','on-extension':'ex-on-ext',
+    'amendment':'ex-amend','on-hold':'ex-on-hold','waiting-irs':'ex-waiting-irs'
+  }[ex] || '';
+}
+
+function sortBy(col) {
+  if (sortCol === col) sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+  else { sortCol = col; sortDir = 'asc'; }
+  renderList();
+}
+
+/* ─────────────────────────────────────────────
+   MAIN RENDER
+───────────────────────────────────────────── */
+function render() {
+  updateStats();
+  updateBanner();
+  if (currentView === 'kanban') renderKanban();
+  else renderList();
+}
+
+/* ─────────────────────────────────────────────
+   DRAG & DROP
+───────────────────────────────────────────── */
+function onDragStart(e, id) {
+  dragId = id;
+  e.dataTransfer.effectAllowed = 'move';
+  setTimeout(() => {
+    const el = document.querySelector(`[data-id="${id}"]`);
+    if (el) el.classList.add('dragging');
+  }, 0);
+}
+
+function onDragEnd(e) {
+  dragId = null;
+  dragOverCol = null;
+  document.querySelectorAll('.kanban-col').forEach(c => c.classList.remove('drag-over'));
+  document.querySelectorAll('[data-id]').forEach(c => c.classList.remove('dragging'));
+}
+
+function onDragOver(e, stageId) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  if (dragOverCol !== stageId) {
+    document.querySelectorAll('.kanban-col').forEach(c => c.classList.remove('drag-over'));
+    const col = document.getElementById(`col-${stageId}`);
+    if (col) col.classList.add('drag-over');
+    dragOverCol = stageId;
+  }
+}
+
+function onDragLeave(e, stageId) {
+  const col = document.getElementById(`col-${stageId}`);
+  if (col && !col.contains(e.relatedTarget)) {
+    col.classList.remove('drag-over');
+    if (dragOverCol === stageId) dragOverCol = null;
+  }
+}
+
+function onDrop(e, stageId) {
+  e.preventDefault();
+  if (!dragId) return;
+  const r = returns.find(x => x.id === dragId);
+  if (!r) return;
+  const oldStage = r.stage;
+  if (oldStage !== stageId) {
+    r.stage = stageId;
+    r.activity = r.activity || [];
+    r.activity.push({ type: 'stage', text: `Moved from ${stageLabel(oldStage)} to ${stageLabel(stageId)}.`, ts: new Date().toISOString() });
+    save();
+    toast(`Moved to ${stageLabel(stageId)}`, 'success');
+  }
+  document.querySelectorAll('.kanban-col').forEach(c => c.classList.remove('drag-over'));
+  render();
+}
+
+/* ─────────────────────────────────────────────
+   CARD ACTIONS
+───────────────────────────────────────────── */
+function handleCardClick(e, id) {
+  if (e.target.closest('.card-action-btn')) return;
+  openDetail(id);
+}
+
+function advanceStage(e, id) {
+  e.stopPropagation();
+  const r = returns.find(x => x.id === id);
+  if (!r) return;
+  const ns = nextStage(r.stage);
+  if (!ns) return;
+  const old = r.stage;
+  r.stage = ns;
+  r.activity = r.activity || [];
+  r.activity.push({ type: 'stage', text: `Moved from ${stageLabel(old)} to ${stageLabel(ns)}.`, ts: new Date().toISOString() });
+  save();
+  toast(`${r.client} → ${stageLabel(ns)}`, 'success');
+  render();
+}
+
+function openDetailTab(e, id, tab) {
+  e.stopPropagation();
+  openDetail(id, tab);
+}
+
+function openEdit(e, id) {
+  e.stopPropagation();
+  openEditModal(id);
+}
+
+/* ─────────────────────────────────────────────
+   DETAIL MODAL
+───────────────────────────────────────────── */
+function openDetail(id, tab) {
+  detailId = id;
+  activeTab = tab || 'details';
+  renderDetailModal();
+  document.getElementById('detailOverlay').classList.add('open');
+}
+
+function renderDetailModal() {
+  const r = returns.find(x => x.id === detailId);
+  if (!r) return;
+
+  document.getElementById('detailTitle').textContent = r.client;
+  document.getElementById('detailSubtitle').textContent = `${r.type} · ${r.year} · ${stageLabel(r.stage)}`;
+
+  // Stage progress
+  const steps = document.getElementById('detailStageSteps');
+  const curIdx = STAGES.findIndex(s => s.id === r.stage);
+  steps.innerHTML = STAGES.map((s, i) => `
+    <div class="stage-step ${i < curIdx ? 'done' : i === curIdx ? 'current' : ''}"
+         onclick="setStageFromProgress('${s.id}')" title="${s.label}">
+      <div class="step-dot">${i < curIdx ? '&#10003;' : s.short}</div>
+      <div class="step-label">${s.label}</div>
+    </div>`).join('');
+
+  // Tabs
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.tab === activeTab);
+  });
+  document.querySelectorAll('.tab-pane').forEach(p => {
+    p.classList.toggle('active', p.id === `tab-${activeTab}`);
+  });
+
+  // Details tab
+  const stageColor = STAGE_COLORS[r.stage] || '#7b7fa8';
+  document.getElementById('detailGrid').innerHTML = `
+    <div class="detail-field">
+      <div class="field-label">Client</div>
+      <div class="field-value">${r.client}</div>
     </div>
-    <div class="card-meta">
-      <span class="card-meta-item">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-        ${r.year}
-      </span>
-      ${r.state ? `<span class="card-meta-item">${r.state}</span>` : ''}
-      ${extTag}
+    <div class="detail-field">
+      <div class="field-label">Email</div>
+      <div class="field-value ${r.email ? '' : 'muted'}">${r.email || '—'}</div>
     </div>
-    ${exTag}
-    <div class="card-footer" style="margin-top:${r.exStatus ? '6px' : '0'}">
-      <span class="priority-dot ${PRIORITY_COLORS[r.priority || '']}" title="${r.priority || 'No priority'}"></span>
-      <span class="card-due ${dc}">${r.dueDate ? formatDate(r.dueDate) : 'No due date'}</span>
-      ${noteCount > 0 ? `<span class="card-note-indicator" title="${noteCount} note(s)">💬 ${noteCount}</span>` : ''}
-      ${r.preparer ? `<span class="card-initials" title="${r.preparer}">${initials(r.preparer)}</span>` : ''}
+    <div class="detail-field">
+      <div class="field-label">Return Type</div>
+      <div class="field-value">${r.type}</div>
+    </div>
+    <div class="detail-field">
+      <div class="field-label">Tax Year</div>
+      <div class="field-value">${r.year}</div>
+    </div>
+    <div class="detail-field">
+      <div class="field-label">Stage</div>
+      <div class="field-value"><span class="stage-pill" style="background:${stageColor}22;color:${stageColor};border:1px solid ${stageColor}44"><span style="width:6px;height:6px;border-radius:50%;background:${stageColor};display:inline-block;margin-right:4px"></span>${stageLabel(r.stage)}</span></div>
+    </div>
+    <div class="detail-field">
+      <div class="field-label">Priority</div>
+      <div class="field-value">${r.priority}</div>
+    </div>
+    <div class="detail-field">
+      <div class="field-label">Preparer</div>
+      <div class="field-value ${r.preparer ? '' : 'muted'}">${r.preparer || '—'}</div>
+    </div>
+    <div class="detail-field">
+      <div class="field-label">Reviewer</div>
+      <div class="field-value ${r.reviewer ? '' : 'muted'}">${r.reviewer || '—'}</div>
+    </div>
+    <div class="detail-field">
+      <div class="field-label">State</div>
+      <div class="field-value ${r.state ? '' : 'muted'}">${r.state || '—'}</div>
+    </div>
+    <div class="detail-field">
+      <div class="field-label">Due Date</div>
+      <div class="field-value">${formatDate(r.dueDate)}</div>
+    </div>
+    <div class="detail-field">
+      <div class="field-label">Extension</div>
+      <div class="field-value">${r.extension ? 'Yes' : 'No'}</div>
+    </div>
+    <div class="detail-field">
+      <div class="field-label">Exception</div>
+      <div class="field-value ${r.exStatus ? '' : 'muted'}">${r.exStatus ? exLabel(r.exStatus) : '—'}</div>
     </div>
   `;
-  return card;
+
+  // Next stage button
+  const ns = nextStage(r.stage);
+  const nsBtn = document.getElementById('detailNextStage');
+  if (ns) {
+    nsBtn.textContent = `Move to ${stageLabel(ns)} →`;
+    nsBtn.style.display = '';
+  } else {
+    nsBtn.style.display = 'none';
+  }
+
+  // Activity tab
+  const activity = (r.activity || []).slice().reverse();
+  const actHtml = activity.length === 0
+    ? '<div style="color:var(--text-dim);font-size:13px;padding:16px 0">No activity yet.</div>'
+    : activity.map(a => `
+      <div class="activity-item">
+        <div class="activity-dot ${a.type}"></div>
+        <div class="activity-content">
+          <div class="activity-text">${a.text}</div>
+          <div class="activity-time">${formatTs(a.ts)}</div>
+        </div>
+      </div>`).join('');
+  document.getElementById('activityList').innerHTML = actHtml;
+  document.getElementById('noteInput').value = '';
 }
 
-// ─── RENDER: LIST ────────────────────────────────────────────────────────────
+function formatTs(ts) {
+  if (!ts) return '';
+  const d = new Date(ts);
+  return d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric', hour:'numeric', minute:'2-digit' });
+}
 
-function renderList(data) {
-  const sorted = [...data].sort((a, b) => {
-    let av = a[listSortKey] || '', bv = b[listSortKey] || '';
-    return av < bv ? -listSortDir : av > bv ? listSortDir : 0;
+function setStageFromProgress(stageId) {
+  const r = returns.find(x => x.id === detailId);
+  if (!r || r.stage === stageId) return;
+  const old = r.stage;
+  r.stage = stageId;
+  r.activity = r.activity || [];
+  r.activity.push({ type: 'stage', text: `Moved from ${stageLabel(old)} to ${stageLabel(stageId)}.`, ts: new Date().toISOString() });
+  save();
+  toast(`Moved to ${stageLabel(stageId)}`, 'success');
+  renderDetailModal();
+  render();
+}
+
+// Tab switching
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    activeTab = btn.dataset.tab;
+    renderDetailModal();
   });
-  const body = document.getElementById('listBody');
-  body.innerHTML = '';
-  sorted.forEach(r => {
-    const stage = stageById(r.stage);
-    const dc = dueClass(r.dueDate);
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td><strong>${r.client}</strong></td>
-      <td><span class="card-type-badge ${TYPE_COLORS[r.type] || ''}" style="font-size:11px;padding:2px 7px;border-radius:4px;">${r.type}</span></td>
-      <td>${r.year}</td>
-      <td><span class="status-pill" style="background:${stage.color}22;color:${stage.color};border:1px solid ${stage.color}44">
-        <span style="width:6px;height:6px;border-radius:50%;background:${stage.color};display:inline-block"></span>
-        ${stage.label}
-      </span></td>
-      <td>${r.preparer || `<span style="color:var(--text-dim)">—</span>`}</td>
-      <td><span class="priority-dot ${PRIORITY_COLORS[r.priority || '']}" style="display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px"></span>${r.priority || '—'}</td>
-      <td class="card-due ${dc}">${r.dueDate ? formatDate(r.dueDate) : '—'}</td>
-      <td>${r.extension ? '<span class="extension-tag">EXT</span>' : '—'}</td>
-    `;
-    tr.onclick = () => openDetail(r.id);
-    body.appendChild(tr);
-  });
+});
+
+// Next stage in detail modal
+document.getElementById('detailNextStage').onclick = () => {
+  const r = returns.find(x => x.id === detailId);
+  if (!r) return;
+  const ns = nextStage(r.stage);
+  if (!ns) return;
+  setStageFromProgress(ns);
+};
+
+// Add note
+document.getElementById('addNoteBtn').onclick = () => {
+  const r = returns.find(x => x.id === detailId);
+  if (!r) return;
+  const text = document.getElementById('noteInput').value.trim();
+  if (!text) return;
+  r.activity = r.activity || [];
+  r.activity.push({ type: 'note', text, ts: new Date().toISOString() });
+  save();
+  toast('Note added', 'success');
+  renderDetailModal();
+  render();
+};
+
+// Close detail
+document.getElementById('detailClose').onclick = () => {
+  document.getElementById('detailOverlay').classList.remove('open');
+};
+document.getElementById('detailOverlay').onclick = (e) => {
+  if (e.target === document.getElementById('detailOverlay'))
+    document.getElementById('detailOverlay').classList.remove('open');
+};
+
+// Edit from detail
+document.getElementById('detailEditBtn').onclick = () => {
+  document.getElementById('detailOverlay').classList.remove('open');
+  openEditModal(detailId);
+};
+
+// Delete from detail
+document.getElementById('detailDeleteBtn').onclick = () => {
+  const r = returns.find(x => x.id === detailId);
+  if (!r) return;
+  openConfirm(
+    'Delete Return?',
+    `This will permanently delete "${r.client}" from the pipeline.`,
+    () => {
+      returns = returns.filter(x => x.id !== detailId);
+      save();
+      document.getElementById('detailOverlay').classList.remove('open');
+      toast('Return deleted', 'warn');
+      render();
+    }
+  );
+};
+
+/* ─────────────────────────────────────────────
+   CONFIRM DIALOG
+───────────────────────────────────────────── */
+let confirmCallback = null;
+function openConfirm(title, msg, cb) {
+  document.getElementById('confirmTitle').textContent = title;
+  document.getElementById('confirmMsg').textContent = msg;
+  confirmCallback = cb;
+  document.getElementById('confirmOverlay').classList.add('open');
 }
+document.getElementById('confirmOk').onclick = () => {
+  document.getElementById('confirmOverlay').classList.remove('open');
+  if (confirmCallback) { confirmCallback(); confirmCallback = null; }
+};
+document.getElementById('confirmCancel').onclick = () => {
+  document.getElementById('confirmOverlay').classList.remove('open');
+  confirmCallback = null;
+};
 
-function sortList(key) {
-  if (listSortKey === key) listSortDir *= -1;
-  else { listSortKey = key; listSortDir = 1; }
-  applyFilters();
-}
-
-// ─── VIEW TOGGLE ─────────────────────────────────────────────────────────────
-
-function setView(v) {
-  currentView = v;
-  document.getElementById('boardWrap').style.display = v === 'kanban' ? '' : 'none';
-  document.getElementById('listWrap').classList.toggle('active', v === 'list');
-  document.getElementById('kanbanBtn').classList.toggle('active', v === 'kanban');
-  document.getElementById('listBtn').classList.toggle('active', v === 'list');
-  applyFilters();
-}
-
-// ─── ADD / EDIT MODAL ────────────────────────────────────────────────────────
-
-function openAddModal(preStage) {
+/* ─────────────────────────────────────────────
+   ADD / EDIT MODAL
+───────────────────────────────────────────── */
+function openAddModal() {
   editingId = null;
-  document.getElementById('modalTitle').textContent = 'Add Tax Return';
-  document.getElementById('deleteBtn').style.display = 'none';
+  document.getElementById('formTitle').textContent = 'Add Return';
+  document.getElementById('formSave').textContent = 'Save Return';
   clearForm();
-  if (preStage) document.getElementById('f-stage').value = preStage;
-  document.getElementById('addModal').classList.add('open');
+  document.getElementById('formOverlay').classList.add('open');
 }
 
 function openEditModal(id) {
-  const r = returns.find(r => r.id === id);
-  if (!r) return;
   editingId = id;
-  document.getElementById('modalTitle').textContent = 'Edit Return';
-  document.getElementById('deleteBtn').style.display = '';
-  document.getElementById('f-client').value = r.client;
-  document.getElementById('f-type').value = r.type;
-  document.getElementById('f-year').value = r.year;
+  const r = returns.find(x => x.id === id);
+  if (!r) return;
+  document.getElementById('formTitle').textContent = 'Edit Return';
+  document.getElementById('formSave').textContent = 'Save Changes';
+  document.getElementById('f-client').value = r.client || '';
+  document.getElementById('f-email').value = r.email || '';
+  document.getElementById('f-type').value = r.type || '1040';
+  document.getElementById('f-year').value = r.year || '2025';
+  document.getElementById('f-stage').value = r.stage || 'intake';
+  document.getElementById('f-priority').value = r.priority || 'Medium';
   document.getElementById('f-preparer').value = r.preparer || '';
   document.getElementById('f-reviewer').value = r.reviewer || '';
-  document.getElementById('f-stage').value = r.stage;
-  document.getElementById('f-priority').value = r.priority || '';
-  document.getElementById('f-exstatus').value = r.exStatus || '';
-  document.getElementById('f-due').value = r.dueDate || '';
-  document.getElementById('f-ext').value = String(r.extension || false);
-  document.getElementById('f-ein').value = r.ein || '';
   document.getElementById('f-state').value = r.state || '';
-  document.getElementById('f-notes').value = '';
-  document.getElementById('addModal').classList.add('open');
+  document.getElementById('f-due').value = r.dueDate || '';
+  document.getElementById('f-exStatus').value = r.exStatus || '';
+  document.getElementById('f-extension').checked = !!r.extension;
+  document.getElementById('f-note').value = '';
+  document.getElementById('formOverlay').classList.add('open');
 }
 
 function clearForm() {
-  ['f-client','f-preparer','f-reviewer','f-due','f-ein','f-state','f-notes'].forEach(id => {
-    document.getElementById(id).value = '';
-  });
+  document.getElementById('f-client').value = '';
+  document.getElementById('f-email').value = '';
   document.getElementById('f-type').value = '1040';
   document.getElementById('f-year').value = '2025';
   document.getElementById('f-stage').value = 'intake';
-  document.getElementById('f-exstatus').value = '';
-  document.getElementById('f-priority').value = '';
-  document.getElementById('f-ext').value = 'false';
+  document.getElementById('f-priority').value = 'Medium';
+  document.getElementById('f-preparer').value = '';
+  document.getElementById('f-reviewer').value = '';
+  document.getElementById('f-state').value = '';
+  document.getElementById('f-due').value = '';
+  document.getElementById('f-exStatus').value = '';
+  document.getElementById('f-extension').checked = false;
+  document.getElementById('f-note').value = '';
 }
 
-function closeAddModal() {
-  document.getElementById('addModal').classList.remove('open');
-  editingId = null;
-}
-
-function saveReturn() {
+document.getElementById('formSave').onclick = () => {
   const client = document.getElementById('f-client').value.trim();
-  if (!client) { alert('Client name is required.'); return; }
-
+  if (!client) { toast('Client name is required', 'warn'); return; }
   if (editingId) {
-    const r = returns.find(r => r.id === editingId);
-    const prevStage = r.stage;
+    const r = returns.find(x => x.id === editingId);
+    if (!r) return;
+    const oldStage = r.stage;
     const newStage = document.getElementById('f-stage').value;
-    r.client = client;
-    r.type = document.getElementById('f-type').value;
-    r.year = document.getElementById('f-year').value;
-    r.preparer = document.getElementById('f-preparer').value.trim();
-    r.reviewer = document.getElementById('f-reviewer').value.trim();
-    r.priority = document.getElementById('f-priority').value;
-    const newExStatus = document.getElementById('f-exstatus').value;
-    if ((r.exStatus || '') !== newExStatus) {
-      const prev = exStatusById(r.exStatus || '').label;
-      const next = exStatusById(newExStatus).label;
-      r.notes.push({ text: `Exception status: ${prev} → ${next}`, author: 'System', ts: Date.now() });
+    r.client    = client;
+    r.email     = document.getElementById('f-email').value.trim();
+    r.type      = document.getElementById('f-type').value;
+    r.year      = document.getElementById('f-year').value;
+    r.stage     = newStage;
+    r.priority  = document.getElementById('f-priority').value;
+    r.preparer  = document.getElementById('f-preparer').value;
+    r.reviewer  = document.getElementById('f-reviewer').value;
+    r.state     = document.getElementById('f-state').value.toUpperCase().trim();
+    r.dueDate   = document.getElementById('f-due').value;
+    r.exStatus  = document.getElementById('f-exStatus').value;
+    r.extension = document.getElementById('f-extension').checked;
+    r.activity  = r.activity || [];
+    if (oldStage !== newStage) {
+      r.activity.push({ type:'stage', text:`Moved from ${stageLabel(oldStage)} to ${stageLabel(newStage)}.`, ts: new Date().toISOString() });
     }
-    r.exStatus = newExStatus;
-    r.stage = newStage;
-    r.dueDate = document.getElementById('f-due').value;
-    r.extension = document.getElementById('f-ext').value === 'true';
-    r.ein = document.getElementById('f-ein').value.trim();
-    r.state = document.getElementById('f-state').value.trim().toUpperCase();
-    const noteText = document.getElementById('f-notes').value.trim();
-    if (noteText) r.notes.push({ text: noteText, author: 'User', ts: Date.now() });
-    if (prevStage !== newStage) {
-      r.notes.push({ text: `Status changed: ${stageById(prevStage).label} → ${stageById(newStage).label}`, author: 'System', ts: Date.now() });
-    }
-    toast('Return updated');
+    const note = document.getElementById('f-note').value.trim();
+    if (note) r.activity.push({ type:'note', text:note, ts: new Date().toISOString() });
+    r.activity.push({ type:'edit', text:'Return details updated.', ts: new Date().toISOString() });
+    save();
+    toast('Changes saved', 'success');
   } else {
-    const newReturn = {
-      id: uid(),
+    const note = document.getElementById('f-note').value.trim();
+    const r = {
+      id:        uid(),
       client,
-      type: document.getElementById('f-type').value,
-      year: document.getElementById('f-year').value,
-      preparer: document.getElementById('f-preparer').value.trim(),
-      reviewer: document.getElementById('f-reviewer').value.trim(),
-      priority: document.getElementById('f-priority').value,
-      exStatus: document.getElementById('f-exstatus').value,
-      stage: document.getElementById('f-stage').value,
-      dueDate: document.getElementById('f-due').value,
-      extension: document.getElementById('f-ext').value === 'true',
-      ein: document.getElementById('f-ein').value.trim(),
-      state: document.getElementById('f-state').value.trim().toUpperCase(),
-      notes: [],
-      created: Date.now()
+      email:     document.getElementById('f-email').value.trim(),
+      type:      document.getElementById('f-type').value,
+      year:      document.getElementById('f-year').value,
+      stage:     document.getElementById('f-stage').value,
+      priority:  document.getElementById('f-priority').value,
+      preparer:  document.getElementById('f-preparer').value,
+      reviewer:  document.getElementById('f-reviewer').value,
+      state:     document.getElementById('f-state').value.toUpperCase().trim(),
+      dueDate:   document.getElementById('f-due').value,
+      exStatus:  document.getElementById('f-exStatus').value,
+      extension: document.getElementById('f-extension').checked,
+      createdAt: new Date().toISOString(),
+      activity:  [
+        { type:'create', text:'Return added to pipeline.', ts: new Date().toISOString() },
+        ...(note ? [{ type:'note', text:note, ts: new Date().toISOString() }] : [])
+      ],
     };
-    const noteText = document.getElementById('f-notes').value.trim();
-    if (noteText) newReturn.notes.push({ text: noteText, author: 'User', ts: Date.now() });
-    newReturn.notes.push({ text: 'Return added to pipeline', author: 'System', ts: Date.now() });
-    returns.push(newReturn);
-    toast('Return added');
+    returns.push(r);
+    save();
+    toast(`${client} added`, 'success');
   }
+  document.getElementById('formOverlay').classList.remove('open');
+  render();
+};
 
-  saveData();
-  closeAddModal();
-  applyFilters();
+document.getElementById('formClose').onclick = () => { document.getElementById('formOverlay').classList.remove('open'); };
+document.getElementById('formCancel').onclick = () => { document.getElementById('formOverlay').classList.remove('open'); };
+document.getElementById('formOverlay').onclick = (e) => {
+  if (e.target === document.getElementById('formOverlay'))
+    document.getElementById('formOverlay').classList.remove('open');
+};
+
+/* ─────────────────────────────────────────────
+   EXPORT CSV
+───────────────────────────────────────────── */
+function exportCsv() {
+  const yr = document.getElementById('yearFilter').value;
+  const rows = yr ? returns.filter(x => x.year === yr) : returns;
+  const headers = ['Client','Email','Type','Year','Stage','Priority','Preparer','Reviewer','State','Due Date','Extension','Exception','Notes'];
+  const lines = [headers.join(',')];
+  rows.forEach(r => {
+    const notes = (r.activity||[]).filter(a=>a.type==='note').map(a=>a.text).join(' | ').replace(/,/g,';');
+    lines.push([
+      `"${r.client}"`,
+      `"${r.email||''}"`,
+      r.type, r.year,
+      stageLabel(r.stage),
+      r.priority,
+      r.preparer||'',
+      r.reviewer||'',
+      r.state||'',
+      r.dueDate||'',
+      r.extension?'Yes':'No',
+      exLabel(r.exStatus)||'',
+      `"${notes}"`,
+    ].join(','));
+  });
+  const blob = new Blob([lines.join('\n')], {type:'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `track-pipeline-${yr||'all'}.csv`;
+  a.click();
+  toast('CSV exported', 'info');
 }
 
-function deleteCurrentReturn() {
-  if (!editingId) return;
-  const r = returns.find(r => r.id === editingId);
-  if (!confirm(`Delete "${r.client}"? This cannot be undone.`)) return;
-  returns = returns.filter(r => r.id !== editingId);
-  saveData();
-  closeAddModal();
-  applyFilters();
-  toast('Return deleted');
-}
+/* ─────────────────────────────────────────────
+   VIEW TOGGLE
+───────────────────────────────────────────── */
+document.getElementById('kanbanViewBtn').onclick = () => {
+  currentView = 'kanban';
+  document.getElementById('kanbanViewBtn').classList.add('active');
+  document.getElementById('listViewBtn').classList.remove('active');
+  render();
+};
+document.getElementById('listViewBtn').onclick = () => {
+  currentView = 'list';
+  document.getElementById('listViewBtn').classList.add('active');
+  document.getElementById('kanbanViewBtn').classList.remove('active');
+  render();
+};
 
-// ─── DETAIL MODAL ────────────────────────────────────────────────────────────
+/* ─────────────────────────────────────────────
+   FILTERS WIRING
+───────────────────────────────────────────── */
+document.getElementById('searchInput').addEventListener('input', (e) => {
+  filters.search = e.target.value;
+  render();
+});
+document.getElementById('typeFilter').addEventListener('change', (e) => {
+  filters.type = e.target.value;
+  e.target.classList.toggle('active', !!e.target.value);
+  render();
+});
+document.getElementById('preparerFilter').addEventListener('change', (e) => {
+  filters.preparer = e.target.value;
+  e.target.classList.toggle('active', !!e.target.value);
+  render();
+});
+document.getElementById('priorityFilter').addEventListener('change', (e) => {
+  filters.priority = e.target.value;
+  e.target.classList.toggle('active', !!e.target.value);
+  render();
+});
+document.getElementById('exFilter').addEventListener('change', (e) => {
+  filters.exStatus = e.target.value;
+  e.target.classList.toggle('active', !!e.target.value);
+  render();
+});
+document.getElementById('yearFilter').addEventListener('change', () => render());
 
-function openDetail(id) {
-  const r = returns.find(r => r.id === id);
-  if (!r) return;
-  detailId = id;
-  const stage = stageById(r.stage);
-
-  document.getElementById('detailTitle').textContent = r.client;
-
-  // Stage progress bar
-  const bar = document.getElementById('detailStatusBar');
-  const curIdx = STAGES.findIndex(s => s.id === r.stage);
-  bar.innerHTML = STAGES.map((s, i) => {
-    let cls = 'stage-step-btn';
-    let style = '';
-    if (i < curIdx) { cls += ' passed'; style = `background:${s.color}22;color:${s.color};border-color:${s.color}44`; }
-    else if (i === curIdx) { cls += ' current'; style = `background:${s.color};border-color:${s.color}`; }
-    const arrow = i < STAGES.length - 1 ? `<span class="stage-arrow">›</span>` : '';
-    return `<div class="stage-step">
-      <button class="${cls}" style="${style}" onclick="moveToStage('${s.id}')">${s.label}</button>
-      ${arrow}
-    </div>`;
-  }).join('');
-
-  // Detail grid
-  const dc = dueClass(r.dueDate);
-  document.getElementById('detailGrid').innerHTML = `
-    <div class="detail-field"><label>Return Type</label><div class="val"><span class="card-type-badge ${TYPE_COLORS[r.type] || ''}">${r.type}</span></div></div>
-    <div class="detail-field"><label>Tax Year</label><div class="val">${r.year}</div></div>
-    <div class="detail-field"><label>Preparer</label><div class="val">${r.preparer || '—'}</div></div>
-    <div class="detail-field"><label>Reviewer</label><div class="val">${r.reviewer || '—'}</div></div>
-    <div class="detail-field"><label>Due Date</label><div class="val card-due ${dc}">${r.dueDate ? formatDate(r.dueDate) : '—'}</div></div>
-    <div class="detail-field"><label>Extension</label><div class="val">${r.extension ? '<span class="extension-tag">Filed</span>' : 'No'}</div></div>
-    <div class="detail-field"><label>Priority</label><div class="val"><span class="priority-dot ${PRIORITY_COLORS[r.priority || '']}" style="display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px"></span>${r.priority || 'None'}</div></div>
-    <div class="detail-field"><label>Exception Status</label><div class="val">${r.exStatus ? `<span class="ex-status-tag" style="background:${exStatusById(r.exStatus).bg};color:${exStatusById(r.exStatus).color};width:auto;margin-top:0">${exStatusById(r.exStatus).label}</span>` : '<span style="color:var(--green)">Active</span>'}</div></div>
-    <div class="detail-field"><label>State</label><div class="val">${r.state || '—'}</div></div>
-    ${r.ein ? `<div class="detail-field"><label>EIN/SSN (last 4)</label><div class="val">••••${r.ein}</div></div>` : ''}
-  `;
-
-  renderNotes(r);
-  document.getElementById('noteInput').value = '';
-  document.getElementById('detailModal').classList.add('open');
-}
-
-function renderNotes(r) {
-  const list = document.getElementById('noteList');
-  const notes = [...r.notes].reverse();
-  if (notes.length === 0) {
-    list.innerHTML = '<div style="font-size:12px;color:var(--text-dim);padding:4px 0">No activity yet.</div>';
+/* ─────────────────────────────────────────────
+   KEYBOARD SHORTCUTS
+───────────────────────────────────────────── */
+document.addEventListener('keydown', (e) => {
+  // Cmd/Ctrl+N = new return
+  if ((e.metaKey || e.ctrlKey) && e.key === 'n') {
+    e.preventDefault();
+    openAddModal();
     return;
   }
-  list.innerHTML = notes.map(n => {
-    const d = new Date(n.ts);
-    const fmt = d.toLocaleDateString('en-US', { month:'short', day:'numeric', hour:'numeric', minute:'2-digit' });
-    const isSystem = n.author === 'System';
-    return `<div class="note-item" style="${isSystem ? 'border-color:var(--accent-dim);background:var(--accent-dim)' : ''}">
-      <div class="note-meta">${isSystem ? '⚙' : '●'} ${n.author} · ${fmt}</div>
-      ${n.text}
-    </div>`;
-  }).join('');
-}
-
-function addNote() {
-  const text = document.getElementById('noteInput').value.trim();
-  if (!text) return;
-  const r = returns.find(r => r.id === detailId);
-  if (!r) return;
-  r.notes.push({ text, author: 'User', ts: Date.now() });
-  saveData();
-  renderNotes(r);
-  document.getElementById('noteInput').value = '';
-  applyFilters();
-  toast('Note added');
-}
-
-function moveToStage(stageId) {
-  const r = returns.find(r => r.id === detailId);
-  if (!r || r.stage === stageId) return;
-  const prevStage = r.stage;
-  r.stage = stageId;
-  r.notes.push({ text: `Status changed: ${stageById(prevStage).label} → ${stageById(stageId).label}`, author: 'System', ts: Date.now() });
-  saveData();
-  openDetail(detailId); // re-render
-  applyFilters();
-  toast(`Moved to "${stageById(stageId).label}"`);
-}
-
-function closeDetailModal() {
-  document.getElementById('detailModal').classList.remove('open');
-  detailId = null;
-}
-
-function openEditFromDetail() {
-  closeDetailModal();
-  openEditModal(detailId || returns[0]?.id);
-}
-
-// ─── EXPORT ──────────────────────────────────────────────────────────────────
-
-function exportCSV() {
-  const headers = ['Client','Type','Year','Stage','Exception Status','Preparer','Reviewer','Priority','Due Date','Extension','State'];
-  const rows = returns.map(r => [
-    `"${r.client}"`, r.type, r.year, stageById(r.stage).label,
-    exStatusById(r.exStatus || '').label,
-    r.preparer, r.reviewer, r.priority, r.dueDate,
-    r.extension ? 'Yes' : 'No', r.state
-  ]);
-  const csv = [headers, ...rows].map(r => r.join(',')).join('\n');
-  const a = document.createElement('a');
-  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
-  a.download = `track-pipeline-${new Date().toISOString().slice(0,10)}.csv`;
-  a.click();
-  toast('CSV exported');
-}
-
-// ─── TOAST ───────────────────────────────────────────────────────────────────
-
-function toast(msg, type = 'success') {
-  const el = document.createElement('div');
-  el.className = `toast ${type}`;
-  el.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>${msg}`;
-  document.getElementById('toastContainer').appendChild(el);
-  setTimeout(() => el.remove(), 3000);
-}
-
-// ─── KEYBOARD ────────────────────────────────────────────────────────────────
-
-document.addEventListener('keydown', e => {
+  // Escape = close top modal
   if (e.key === 'Escape') {
-    closeDetailModal();
-    closeAddModal();
-  }
-  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-    e.preventDefault();
-    document.getElementById('searchInput').focus();
+    if (document.getElementById('confirmOverlay').classList.contains('open')) {
+      document.getElementById('confirmOverlay').classList.remove('open');
+    } else if (document.getElementById('formOverlay').classList.contains('open')) {
+      document.getElementById('formOverlay').classList.remove('open');
+    } else if (document.getElementById('detailOverlay').classList.contains('open')) {
+      document.getElementById('detailOverlay').classList.remove('open');
+    }
   }
 });
 
-// ─── INIT ────────────────────────────────────────────────────────────────────
+/* ─────────────────────────────────────────────
+   BUTTON WIRING
+───────────────────────────────────────────── */
+document.getElementById('addBtn').onclick = openAddModal;
+document.getElementById('exportBtn').onclick = exportCsv;
 
-applyFilters();
+/* ─────────────────────────────────────────────
+   INIT
+───────────────────────────────────────────── */
+load();
+render();
 </script>
 </body>
 </html>

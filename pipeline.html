@@ -1,0 +1,1486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Track CPA — Tax Return Pipeline</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #232636;
+    --border: #2e3147;
+    --border-light: #3d4166;
+    --text: #e8eaf6;
+    --text-muted: #8b90b8;
+    --text-dim: #5a5f82;
+    --accent: #6c72ff;
+    --accent-hover: #7c82ff;
+    --accent-dim: rgba(108,114,255,0.15);
+    --green: #34d399;
+    --green-dim: rgba(52,211,153,0.15);
+    --yellow: #fbbf24;
+    --yellow-dim: rgba(251,191,36,0.15);
+    --red: #f87171;
+    --red-dim: rgba(248,113,113,0.15);
+    --blue: #60a5fa;
+    --blue-dim: rgba(96,165,250,0.15);
+    --purple: #a78bfa;
+    --purple-dim: rgba(167,139,250,0.15);
+    --orange: #fb923c;
+    --orange-dim: rgba(251,146,60,0.15);
+    --radius: 8px;
+    --radius-sm: 5px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.4);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 14px; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ─── TOP NAV ─── */
+  .topnav {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .topnav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: -0.3px;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .topnav-logo .badge {
+    font-size: 10px;
+    font-weight: 600;
+    background: var(--accent-dim);
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 2px 6px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .topnav-divider { width: 1px; height: 24px; background: var(--border); margin: 0 4px; }
+  .topnav-title { color: var(--text-muted); font-size: 13px; }
+  .topnav-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+  .year-selector {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 5px 10px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    cursor: pointer;
+    outline: none;
+  }
+  .year-selector:focus { border-color: var(--accent); }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: var(--accent-hover); }
+  .btn-ghost { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
+  .btn-ghost:hover { background: var(--surface2); color: var(--text); border-color: var(--border-light); }
+  .btn-danger { background: var(--red-dim); color: var(--red); border: 1px solid transparent; }
+  .btn-danger:hover { border-color: var(--red); }
+  .btn svg { flex-shrink: 0; }
+
+  /* ─── TOOLBAR ─── */
+  .toolbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .search-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 220px;
+    max-width: 320px;
+  }
+  .search-wrap svg {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-dim);
+    pointer-events: none;
+  }
+  .search-input {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 7px 10px 7px 32px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    outline: none;
+  }
+  .search-input:focus { border-color: var(--accent); }
+  .search-input::placeholder { color: var(--text-dim); }
+  .filter-select {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 7px 10px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    cursor: pointer;
+    outline: none;
+  }
+  .filter-select:focus { border-color: var(--accent); }
+  .toolbar-spacer { flex: 1; }
+  .view-toggle {
+    display: flex;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+  .view-btn {
+    padding: 6px 10px;
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: all 0.15s;
+  }
+  .view-btn.active { background: var(--accent-dim); color: var(--accent); }
+  .view-btn:hover:not(.active) { color: var(--text); }
+
+  /* ─── STATS BAR ─── */
+  .stats-bar {
+    display: flex;
+    gap: 1px;
+    background: var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .stat-chip {
+    flex: 1;
+    background: var(--surface);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .stat-chip .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .stat-chip .label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .stat-chip .val { font-size: 18px; font-weight: 700; margin-top: 1px; }
+
+  /* ─── KANBAN BOARD ─── */
+  .board-wrap {
+    overflow-x: auto;
+    padding: 20px 24px;
+    height: calc(100vh - 56px - 52px - 48px);
+  }
+  .board {
+    display: flex;
+    gap: 12px;
+    height: 100%;
+    min-width: max-content;
+  }
+  .column {
+    width: 260px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .column-header {
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .column-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .column-title {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--text-muted);
+    flex: 1;
+  }
+  .column-count {
+    font-size: 11px;
+    font-weight: 700;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 1px 7px;
+    border-radius: 20px;
+  }
+  .column-cards {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .column-cards::-webkit-scrollbar { width: 4px; }
+  .column-cards::-webkit-scrollbar-track { background: transparent; }
+  .column-cards::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  .column.drag-over { border-color: var(--accent); background: var(--accent-dim); }
+
+  /* ─── RETURN CARD ─── */
+  .card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 11px 12px;
+    cursor: pointer;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    position: relative;
+    user-select: none;
+  }
+  .card:hover { border-color: var(--border-light); box-shadow: 0 2px 12px rgba(0,0,0,0.3); }
+  .card.dragging { opacity: 0.4; }
+  .card-top { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px; }
+  .card-type-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 4px;
+    letter-spacing: 0.3px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .card-client { font-size: 13px; font-weight: 600; color: var(--text); line-height: 1.3; flex: 1; }
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 7px;
+  }
+  .card-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+  .card-meta-item svg { color: var(--text-dim); }
+  .card-footer { display: flex; align-items: center; gap: 6px; }
+  .priority-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .card-due {
+    font-size: 11px;
+    color: var(--text-muted);
+    flex: 1;
+  }
+  .card-due.overdue { color: var(--red); }
+  .card-due.soon { color: var(--yellow); }
+  .card-initials {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--accent-dim);
+    color: var(--accent);
+    font-size: 9px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--accent);
+    flex-shrink: 0;
+    cursor: pointer;
+    position: relative;
+  }
+  .card-initials[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: calc(100% + 6px);
+    right: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    white-space: nowrap;
+    z-index: 10;
+  }
+  .card-note-indicator {
+    font-size: 10px;
+    color: var(--text-dim);
+  }
+  .extension-tag {
+    font-size: 10px;
+    font-weight: 600;
+    background: var(--yellow-dim);
+    color: var(--yellow);
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+  .ex-status-tag {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 3px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 6px;
+    width: 100%;
+  }
+  .ex-status-tag::before {
+    content: '⚠';
+    font-size: 9px;
+  }
+
+  /* ─── LIST VIEW ─── */
+  .list-wrap {
+    padding: 20px 24px;
+    display: none;
+  }
+  .list-wrap.active { display: block; }
+  .list-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .list-table th {
+    text-align: left;
+    padding: 9px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    cursor: pointer;
+  }
+  .list-table th:hover { color: var(--text); }
+  .list-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  .list-table tr { background: var(--surface); transition: background 0.1s; cursor: pointer; }
+  .list-table tr:hover { background: var(--surface2); }
+  .list-table tr:last-child td { border-bottom: none; }
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  /* ─── MODAL ─── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    width: 100%;
+    max-width: 540px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow);
+    transform: translateY(12px);
+    transition: transform 0.2s;
+  }
+  .modal-overlay.open .modal { transform: translateY(0); }
+  .modal::-webkit-scrollbar { width: 6px; }
+  .modal::-webkit-scrollbar-track { background: transparent; }
+  .modal::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  .modal-header {
+    padding: 18px 20px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .modal-header h2 { font-size: 16px; font-weight: 600; flex: 1; }
+  .modal-close {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    transition: color 0.15s;
+  }
+  .modal-close:hover { color: var(--text); }
+  .modal-body { padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+  .modal-footer {
+    padding: 14px 20px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .form-group { display: flex; flex-direction: column; gap: 5px; }
+  .form-group label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .form-control {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 10px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    outline: none;
+    width: 100%;
+    transition: border-color 0.15s;
+  }
+  .form-control:focus { border-color: var(--accent); }
+  .form-control::placeholder { color: var(--text-dim); }
+  textarea.form-control { resize: vertical; min-height: 80px; font-family: inherit; }
+
+  /* ─── DETAIL MODAL ─── */
+  .detail-modal { max-width: 620px; }
+  .detail-status-bar {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .detail-status-bar::-webkit-scrollbar { display: none; }
+  .stage-step {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  .stage-step-btn {
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.15s;
+    white-space: nowrap;
+    background: var(--surface2);
+    color: var(--text-muted);
+    border-color: var(--border);
+  }
+  .stage-step-btn.current { color: #fff; }
+  .stage-step-btn.passed { opacity: 0.6; }
+  .stage-arrow { color: var(--text-dim); font-size: 11px; }
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .detail-field label { font-size: 10px; font-weight: 700; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.6px; display: block; margin-bottom: 4px; }
+  .detail-field .val { font-size: 13px; color: var(--text); }
+  .notes-section { padding: 16px 20px; }
+  .notes-section h3 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 10px; }
+  .note-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+  .note-item {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .note-item .note-meta { font-size: 10px; color: var(--text-dim); margin-bottom: 4px; }
+  .note-input-wrap { display: flex; gap: 8px; }
+  .note-input-wrap textarea { flex: 1; min-height: 60px; }
+
+  /* ─── EMPTY STATE ─── */
+  .empty-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 12px;
+    color: var(--text-dim);
+    font-size: 12px;
+    gap: 6px;
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+    margin-top: 4px;
+  }
+  .empty-col:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ─── TOAST ─── */
+  .toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 500; display: flex; flex-direction: column; gap: 8px; }
+  .toast {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--text);
+    box-shadow: var(--shadow);
+    animation: slideIn 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .toast.success { border-color: var(--green); }
+  .toast.success svg { color: var(--green); }
+  @keyframes slideIn { from { transform: translateX(40px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+  /* ─── TYPE COLORS ─── */
+  .type-1040 { background: var(--blue-dim); color: var(--blue); }
+  .type-1040nr { background: var(--purple-dim); color: var(--purple); }
+  .type-1120s { background: var(--green-dim); color: var(--green); }
+  .type-1120 { background: var(--orange-dim); color: var(--orange); }
+  .type-1065 { background: var(--yellow-dim); color: var(--yellow); }
+  .type-1041 { background: rgba(251,113,133,0.15); color: #fb7185; }
+  .type-990 { background: rgba(34,211,238,0.15); color: #22d3ee; }
+
+  .priority-high { background: var(--red); }
+  .priority-med { background: var(--yellow); }
+  .priority-low { background: var(--green); }
+  .priority-none { background: var(--border); }
+
+  /* Stage colors */
+  .col-intake .column-dot { background: var(--text-dim); }
+  .col-organizer .column-dot { background: var(--blue); }
+  .col-waiting-docs .column-dot { background: var(--yellow); }
+  .col-in-prep .column-dot { background: var(--purple); }
+  .col-in-review .column-dot { background: var(--orange); }
+  .col-waiting-sig .column-dot { background: #f472b6; }
+  .col-ready .column-dot { background: var(--accent); }
+  .col-filed .column-dot { background: var(--green); }
+  .col-complete .column-dot { background: #34d399; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 600px) {
+    .topnav { padding: 0 14px; }
+    .toolbar { padding: 8px 14px; }
+    .board-wrap { padding: 12px 14px; }
+    .stats-bar { display: none; }
+    .form-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="topnav">
+  <a class="topnav-logo" href="#">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+    Track CPA
+    <span class="badge">Internal</span>
+  </a>
+  <div class="topnav-divider"></div>
+  <span class="topnav-title">Tax Return Pipeline</span>
+  <div class="topnav-right">
+    <select class="year-selector" id="yearFilter" onchange="applyFilters()">
+      <option value="">All Years</option>
+      <option value="2025" selected>Tax Year 2025</option>
+      <option value="2024">Tax Year 2024</option>
+      <option value="2023">Tax Year 2023</option>
+    </select>
+    <button class="btn btn-ghost" onclick="exportCSV()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Export
+    </button>
+    <button class="btn btn-primary" onclick="openAddModal()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Add Return
+    </button>
+  </div>
+</nav>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <div class="search-wrap">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input class="search-input" id="searchInput" type="text" placeholder="Search clients…" oninput="applyFilters()">
+  </div>
+  <select class="filter-select" id="typeFilter" onchange="applyFilters()">
+    <option value="">All Types</option>
+    <option value="1040">1040 — Individual</option>
+    <option value="1040-NR">1040-NR — Non-Resident</option>
+    <option value="1120S">1120S — S-Corp</option>
+    <option value="1120">1120 — C-Corp</option>
+    <option value="1065">1065 — Partnership</option>
+    <option value="1041">1041 — Trust/Estate</option>
+    <option value="990">990 — Non-Profit</option>
+  </select>
+  <select class="filter-select" id="preparerFilter" onchange="applyFilters()">
+    <option value="">All Preparers</option>
+  </select>
+  <select class="filter-select" id="priorityFilter" onchange="applyFilters()">
+    <option value="">All Priorities</option>
+    <option value="High">High</option>
+    <option value="Medium">Medium</option>
+    <option value="Low">Low</option>
+  </select>
+  <select class="filter-select" id="exStatusFilter" onchange="applyFilters()">
+    <option value="">All Statuses</option>
+    <option value="">Active</option>
+    <option value="missing-info">Missing Info</option>
+    <option value="on-extension">On Extension</option>
+    <option value="waiting-irs">Waiting on IRS</option>
+    <option value="waiting-state">Waiting on State</option>
+    <option value="on-hold">On Hold</option>
+    <option value="amendment">Amendment Needed</option>
+    <option value="payment-pending">Payment Pending</option>
+  </select>
+  <div class="toolbar-spacer"></div>
+  <div class="view-toggle">
+    <button class="view-btn active" id="kanbanBtn" onclick="setView('kanban')" title="Kanban view">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="5" height="18" rx="1"/><rect x="10" y="3" width="5" height="18" rx="1"/><rect x="17" y="3" width="4" height="18" rx="1"/></svg>
+    </button>
+    <button class="view-btn" id="listBtn" onclick="setView('list')" title="List view">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- STATS BAR -->
+<div class="stats-bar" id="statsBar"></div>
+
+<!-- KANBAN BOARD -->
+<div class="board-wrap" id="boardWrap">
+  <div class="board" id="board"></div>
+</div>
+
+<!-- LIST VIEW -->
+<div class="list-wrap" id="listWrap">
+  <table class="list-table">
+    <thead>
+      <tr>
+        <th onclick="sortList('client')">Client ↕</th>
+        <th onclick="sortList('type')">Type ↕</th>
+        <th onclick="sortList('year')">Year ↕</th>
+        <th onclick="sortList('stage')">Stage ↕</th>
+        <th onclick="sortList('preparer')">Preparer ↕</th>
+        <th onclick="sortList('priority')">Priority ↕</th>
+        <th onclick="sortList('dueDate')">Due Date ↕</th>
+        <th>Ext</th>
+      </tr>
+    </thead>
+    <tbody id="listBody"></tbody>
+  </table>
+</div>
+
+<!-- ADD/EDIT MODAL -->
+<div class="modal-overlay" id="addModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modalTitle">Add Tax Return</h2>
+      <button class="modal-close" onclick="closeAddModal()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group" style="grid-column:1/-1">
+          <label>Client Name *</label>
+          <input class="form-control" id="f-client" type="text" placeholder="e.g. John & Jane Smith" required>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Return Type *</label>
+          <select class="form-control" id="f-type">
+            <option value="1040">1040 — Individual</option>
+            <option value="1040-NR">1040-NR — Non-Resident</option>
+            <option value="1120S">1120S — S-Corp</option>
+            <option value="1120">1120 — C-Corp</option>
+            <option value="1065">1065 — Partnership</option>
+            <option value="1041">1041 — Trust/Estate</option>
+            <option value="990">990 — Non-Profit</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Tax Year *</label>
+          <select class="form-control" id="f-year">
+            <option value="2025">2025</option>
+            <option value="2024">2024</option>
+            <option value="2023">2023</option>
+            <option value="2022">2022</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Preparer</label>
+          <input class="form-control" id="f-preparer" type="text" placeholder="e.g. Alex R.">
+        </div>
+        <div class="form-group">
+          <label>Reviewer</label>
+          <input class="form-control" id="f-reviewer" type="text" placeholder="e.g. Sam K.">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Stage</label>
+          <select class="form-control" id="f-stage">
+            <option value="intake">Intake</option>
+            <option value="organizer-sent">Organizer Sent</option>
+            <option value="waiting-docs">Waiting on Documents</option>
+            <option value="in-prep">In Preparation</option>
+            <option value="in-review">In Review</option>
+            <option value="waiting-sig">Waiting on Signature</option>
+            <option value="ready-to-file">Ready to File</option>
+            <option value="filed">Filed</option>
+            <option value="complete">Complete</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Exception Status</label>
+          <select class="form-control" id="f-exstatus">
+            <option value="">Active (none)</option>
+            <option value="missing-info">Missing Info</option>
+            <option value="on-extension">On Extension</option>
+            <option value="waiting-irs">Waiting on IRS</option>
+            <option value="waiting-state">Waiting on State</option>
+            <option value="on-hold">On Hold</option>
+            <option value="amendment">Amendment Needed</option>
+            <option value="payment-pending">Payment Pending</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Priority</label>
+          <select class="form-control" id="f-priority">
+            <option value="">None</option>
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Due Date</label>
+          <input class="form-control" id="f-due" type="date">
+        </div>
+        <div class="form-group">
+          <label>Extension Filed</label>
+          <select class="form-control" id="f-ext">
+            <option value="false">No</option>
+            <option value="true">Yes</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>EIN / SSN (last 4)</label>
+          <input class="form-control" id="f-ein" type="text" placeholder="e.g. 1234" maxlength="4">
+        </div>
+        <div class="form-group">
+          <label>State</label>
+          <input class="form-control" id="f-state" type="text" placeholder="e.g. MN, CA" maxlength="2">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Notes</label>
+        <textarea class="form-control" id="f-notes" placeholder="Any initial notes…"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeAddModal()">Cancel</button>
+      <button class="btn btn-danger" id="deleteBtn" onclick="deleteCurrentReturn()" style="display:none">Delete</button>
+      <button class="btn btn-primary" onclick="saveReturn()">Save Return</button>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="modal-overlay" id="detailModal">
+  <div class="modal detail-modal">
+    <div class="modal-header">
+      <h2 id="detailTitle">Return Detail</h2>
+      <button class="modal-close" onclick="closeDetailModal()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div id="detailStatusBar" class="detail-status-bar"></div>
+    <div id="detailGrid" class="detail-grid"></div>
+    <div class="notes-section">
+      <h3>Activity &amp; Notes</h3>
+      <div id="noteList" class="note-list"></div>
+      <div class="note-input-wrap">
+        <textarea class="form-control" id="noteInput" placeholder="Add a note…"></textarea>
+        <button class="btn btn-primary" onclick="addNote()" style="align-self:flex-end">Post</button>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeDetailModal()">Close</button>
+      <button class="btn btn-ghost" onclick="openEditFromDetail()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        Edit
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+// ─── DATA ───────────────────────────────────────────────────────────────────
+
+// Exception statuses — overlay a job without moving its pipeline stage (per TaxDome model)
+const EXCEPTION_STATUSES = [
+  { id: '',                label: 'Active',           color: 'var(--green)',  bg: 'var(--green-dim)' },
+  { id: 'missing-info',    label: 'Missing Info',     color: '#fbbf24',       bg: 'rgba(251,191,36,0.15)' },
+  { id: 'on-extension',    label: 'On Extension',     color: '#fb923c',       bg: 'rgba(251,146,60,0.15)' },
+  { id: 'waiting-irs',     label: 'Waiting on IRS',   color: '#a78bfa',       bg: 'rgba(167,139,250,0.15)' },
+  { id: 'waiting-state',   label: 'Waiting on State', color: '#60a5fa',       bg: 'rgba(96,165,250,0.15)' },
+  { id: 'on-hold',         label: 'On Hold',          color: '#f87171',       bg: 'rgba(248,113,113,0.15)' },
+  { id: 'amendment',       label: 'Amendment Needed', color: '#f472b6',       bg: 'rgba(244,114,182,0.15)' },
+  { id: 'payment-pending', label: 'Payment Pending',  color: '#34d399',       bg: 'rgba(52,211,153,0.15)' },
+];
+
+function exStatusById(id) { return EXCEPTION_STATUSES.find(s => s.id === (id||'')) || EXCEPTION_STATUSES[0]; }
+
+const STAGES = [
+  { id: 'intake',         label: 'Intake',                 color: '#6b7280', colClass: 'col-intake' },
+  { id: 'organizer-sent', label: 'Organizer Sent',         color: '#60a5fa', colClass: 'col-organizer' },
+  { id: 'waiting-docs',   label: 'Waiting on Documents',   color: '#fbbf24', colClass: 'col-waiting-docs' },
+  { id: 'in-prep',        label: 'In Preparation',         color: '#a78bfa', colClass: 'col-in-prep' },
+  { id: 'in-review',      label: 'In Review',              color: '#fb923c', colClass: 'col-in-review' },
+  { id: 'waiting-sig',    label: 'Waiting on Signature',   color: '#f472b6', colClass: 'col-waiting-sig' },
+  { id: 'ready-to-file',  label: 'Ready to File',          color: '#6c72ff', colClass: 'col-ready' },
+  { id: 'filed',          label: 'Filed',                  color: '#34d399', colClass: 'col-filed' },
+  { id: 'complete',       label: 'Complete',               color: '#34d399', colClass: 'col-complete' },
+];
+
+const TYPE_COLORS = {
+  '1040': 'type-1040', '1040-NR': 'type-1040nr',
+  '1120S': 'type-1120s', '1120': 'type-1120',
+  '1065': 'type-1065', '1041': 'type-1041', '990': 'type-990'
+};
+
+const PRIORITY_COLORS = { High: 'priority-high', Medium: 'priority-med', Low: 'priority-low', '': 'priority-none' };
+
+let returns = loadData();
+let editingId = null;
+let detailId = null;
+let listSortKey = 'client';
+let listSortDir = 1;
+let currentView = 'kanban';
+
+// ─── SEED DATA ──────────────────────────────────────────────────────────────
+
+function seedData() {
+  return [
+    { id: uid(), client: 'Anderson, Mark & Lisa', type: '1040', year: '2025', stage: 'in-prep', exStatus: '', preparer: 'Alex R.', reviewer: 'Sam K.', priority: 'High', dueDate: '2026-04-15', extension: false, ein: '4821', state: 'MN', notes: [], created: Date.now() - 86400000*5 },
+    { id: uid(), client: 'Sunrise Tech LLC', type: '1120S', year: '2025', stage: 'waiting-docs', exStatus: 'missing-info', preparer: 'Jordan M.', reviewer: 'Sam K.', priority: 'Medium', dueDate: '2026-03-17', extension: false, ein: '7734', state: 'MN', notes: [{ text: 'Waiting on K-1s from partner entity', author: 'Jordan M.', ts: Date.now() - 86400000*2 }], created: Date.now() - 86400000*10 },
+    { id: uid(), client: 'Kowalski, Patricia', type: '1040', year: '2025', stage: 'organizer-sent', exStatus: '', preparer: 'Alex R.', reviewer: '', priority: 'Low', dueDate: '2026-04-15', extension: false, ein: '3390', state: 'WI', notes: [], created: Date.now() - 86400000*3 },
+    { id: uid(), client: 'Blue River Partners', type: '1065', year: '2025', stage: 'in-review', exStatus: '', preparer: 'Chris T.', reviewer: 'Sam K.', priority: 'High', dueDate: '2026-03-17', extension: false, ein: '9912', state: 'MN', notes: [{ text: 'Reviewer notes: check depreciation schedule on asset 14', author: 'Sam K.', ts: Date.now() - 3600000 }], created: Date.now() - 86400000*14 },
+    { id: uid(), client: 'Hernandez, Carlos', type: '1040-NR', year: '2025', stage: 'intake', exStatus: '', preparer: '', reviewer: '', priority: '', dueDate: '2026-06-15', extension: false, ein: '2201', state: 'CA', notes: [], created: Date.now() - 86400000*1 },
+    { id: uid(), client: 'Oakwood Family Trust', type: '1041', year: '2025', stage: 'waiting-sig', exStatus: '', preparer: 'Jordan M.', reviewer: 'Sam K.', priority: 'Medium', dueDate: '2026-04-15', extension: true, ein: '5567', state: 'MN', notes: [{ text: 'E-sign sent via TaxDome portal', author: 'Jordan M.', ts: Date.now() - 86400000 }], created: Date.now() - 86400000*20 },
+    { id: uid(), client: 'Chen, Wei & Min', type: '1040', year: '2025', stage: 'filed', exStatus: '', preparer: 'Alex R.', reviewer: 'Sam K.', priority: 'Low', dueDate: '2026-04-15', extension: false, ein: '8843', state: 'MN', notes: [{ text: 'Filed 3/10 — federal & MN accepted', author: 'Alex R.', ts: Date.now() - 86400000*4 }], created: Date.now() - 86400000*30 },
+    { id: uid(), client: 'Northstar Nonprofit Inc.', type: '990', year: '2025', stage: 'ready-to-file', exStatus: '', preparer: 'Chris T.', reviewer: 'Sam K.', priority: 'Medium', dueDate: '2026-05-15', extension: false, ein: '4401', state: 'MN', notes: [], created: Date.now() - 86400000*7 },
+    { id: uid(), client: 'Roberts, David', type: '1040', year: '2024', stage: 'complete', exStatus: '', preparer: 'Alex R.', reviewer: 'Sam K.', priority: '', dueDate: '2025-10-15', extension: true, ein: '1122', state: 'MN', notes: [{ text: 'Extension filed, return complete. Final copy sent.', author: 'Alex R.', ts: Date.now() - 86400000*60 }], created: Date.now() - 86400000*90 },
+    { id: uid(), client: 'Meridian Corp', type: '1120', year: '2025', stage: 'in-prep', exStatus: 'on-hold', preparer: 'Jordan M.', reviewer: 'Sam K.', priority: 'High', dueDate: '2026-04-15', extension: false, ein: '6678', state: 'IL', notes: [{ text: 'Client on hold pending audit resolution', author: 'Jordan M.', ts: Date.now() - 86400000*2 }], created: Date.now() - 86400000*6 },
+  ];
+}
+
+// ─── PERSISTENCE ────────────────────────────────────────────────────────────
+
+function loadData() {
+  try {
+    const raw = localStorage.getItem('track-pipeline-v1');
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  const d = seedData();
+  saveData(d);
+  return d;
+}
+
+function saveData(data) {
+  localStorage.setItem('track-pipeline-v1', JSON.stringify(data || returns));
+}
+
+// ─── UTILITIES ──────────────────────────────────────────────────────────────
+
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
+
+function stageById(id) { return STAGES.find(s => s.id === id) || STAGES[0]; }
+
+function formatDate(d) {
+  if (!d) return '—';
+  const [y, m, day] = d.split('-');
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${months[+m-1]} ${+day}, ${y}`;
+}
+
+function dueClass(dateStr) {
+  if (!dateStr) return '';
+  const now = new Date(); now.setHours(0,0,0,0);
+  const due = new Date(dateStr + 'T00:00:00');
+  const diff = (due - now) / 86400000;
+  if (diff < 0) return 'overdue';
+  if (diff <= 7) return 'soon';
+  return '';
+}
+
+function initials(name) {
+  if (!name) return '?';
+  return name.split(/\s+/).map(w => w[0]).join('').slice(0,2).toUpperCase();
+}
+
+function getPreparers() {
+  const s = new Set();
+  returns.forEach(r => { if (r.preparer) s.add(r.preparer); });
+  return [...s].sort();
+}
+
+function applyFilters() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  const type = document.getElementById('typeFilter').value;
+  const prep = document.getElementById('preparerFilter').value;
+  const pri = document.getElementById('priorityFilter').value;
+  const year = document.getElementById('yearFilter').value;
+  const exSt = document.getElementById('exStatusFilter').value;
+  const filtered = returns.filter(r => {
+    if (q && !r.client.toLowerCase().includes(q)) return false;
+    if (type && r.type !== type) return false;
+    if (prep && r.preparer !== prep) return false;
+    if (pri && r.priority !== pri) return false;
+    if (year && r.year !== year) return false;
+    if (exSt !== '' && (r.exStatus || '') !== exSt) return false;
+    return true;
+  });
+  if (currentView === 'kanban') renderBoard(filtered);
+  else renderList(filtered);
+  renderStats(filtered);
+}
+
+// ─── RENDER: STATS ───────────────────────────────────────────────────────────
+
+function renderStats(data) {
+  const bar = document.getElementById('statsBar');
+  const total = data.length;
+  const filed = data.filter(r => r.stage === 'filed' || r.stage === 'complete').length;
+  const overdue = data.filter(r => dueClass(r.dueDate) === 'overdue' && r.stage !== 'filed' && r.stage !== 'complete').length;
+  const inProg = data.filter(r => ['in-prep','in-review'].includes(r.stage)).length;
+  const waiting = data.filter(r => ['waiting-docs','waiting-sig'].includes(r.stage)).length;
+
+  bar.innerHTML = `
+    <div class="stat-chip">
+      <span class="dot" style="background:#6b7280"></span>
+      <div><div class="label">Total</div><div class="val">${total}</div></div>
+    </div>
+    <div class="stat-chip">
+      <span class="dot" style="background:#a78bfa"></span>
+      <div><div class="label">In Progress</div><div class="val">${inProg}</div></div>
+    </div>
+    <div class="stat-chip">
+      <span class="dot" style="background:#fbbf24"></span>
+      <div><div class="label">Waiting</div><div class="val">${waiting}</div></div>
+    </div>
+    <div class="stat-chip">
+      <span class="dot" style="background:#34d399"></span>
+      <div><div class="label">Filed</div><div class="val">${filed}</div></div>
+    </div>
+    <div class="stat-chip">
+      <span class="dot" style="background:#f87171"></span>
+      <div><div class="label">Overdue</div><div class="val" style="color:${overdue>0?'var(--red)':'var(--text)'}">${overdue}</div></div>
+    </div>
+  `;
+}
+
+// ─── RENDER: KANBAN ───────────────────────────────────────────────────────────
+
+function renderBoard(data) {
+  const board = document.getElementById('board');
+  board.innerHTML = '';
+
+  // Update preparer filter options
+  const prepSel = document.getElementById('preparerFilter');
+  const curPrep = prepSel.value;
+  prepSel.innerHTML = '<option value="">All Preparers</option>';
+  getPreparers().forEach(p => {
+    const o = document.createElement('option');
+    o.value = p; o.textContent = p;
+    if (p === curPrep) o.selected = true;
+    prepSel.appendChild(o);
+  });
+
+  STAGES.forEach(stage => {
+    const cards = data.filter(r => r.stage === stage.id);
+    const col = document.createElement('div');
+    col.className = `column ${stage.colClass}`;
+    col.dataset.stage = stage.id;
+    col.addEventListener('dragover', e => { e.preventDefault(); col.classList.add('drag-over'); });
+    col.addEventListener('dragleave', () => col.classList.remove('drag-over'));
+    col.addEventListener('drop', e => {
+      e.preventDefault();
+      col.classList.remove('drag-over');
+      const id = e.dataTransfer.getData('text/plain');
+      const ret = returns.find(r => r.id === id);
+      if (ret && ret.stage !== stage.id) {
+        const prevStage = ret.stage;
+        ret.stage = stage.id;
+        ret.notes.push({ text: `Status changed: ${stageById(prevStage).label} → ${stage.label}`, author: 'System', ts: Date.now() });
+        saveData();
+        applyFilters();
+        toast(`Moved to "${stage.label}"`);
+      }
+    });
+
+    col.innerHTML = `
+      <div class="column-header">
+        <span class="column-dot" style="background:${stage.color}"></span>
+        <span class="column-title">${stage.label}</span>
+        <span class="column-count">${cards.length}</span>
+      </div>
+      <div class="column-cards" id="col-${stage.id}"></div>
+    `;
+    board.appendChild(col);
+
+    const cardsContainer = col.querySelector('.column-cards');
+    if (cards.length === 0) {
+      const empty = document.createElement('div');
+      empty.className = 'empty-col';
+      empty.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add`;
+      empty.onclick = () => openAddModal(stage.id);
+      cardsContainer.appendChild(empty);
+    } else {
+      cards.forEach(r => cardsContainer.appendChild(buildCard(r)));
+    }
+  });
+}
+
+function buildCard(r) {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.dataset.id = r.id;
+  card.draggable = true;
+  card.addEventListener('dragstart', e => {
+    e.dataTransfer.setData('text/plain', r.id);
+    card.classList.add('dragging');
+  });
+  card.addEventListener('dragend', () => card.classList.remove('dragging'));
+  card.onclick = () => openDetail(r.id);
+
+  const dc = dueClass(r.dueDate);
+  const extTag = r.extension ? `<span class="extension-tag">EXT</span>` : '';
+  const noteCount = r.notes.filter(n => n.author !== 'System').length;
+  const exSt = exStatusById(r.exStatus || '');
+  const exTag = r.exStatus ? `<div class="ex-status-tag" style="background:${exSt.bg};color:${exSt.color}">${exSt.label}</div>` : '';
+
+  card.innerHTML = `
+    <div class="card-top">
+      <span class="card-type-badge ${TYPE_COLORS[r.type] || ''}">${r.type}</span>
+      <span class="card-client">${r.client}</span>
+    </div>
+    <div class="card-meta">
+      <span class="card-meta-item">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        ${r.year}
+      </span>
+      ${r.state ? `<span class="card-meta-item">${r.state}</span>` : ''}
+      ${extTag}
+    </div>
+    ${exTag}
+    <div class="card-footer" style="margin-top:${r.exStatus ? '6px' : '0'}">
+      <span class="priority-dot ${PRIORITY_COLORS[r.priority || '']}" title="${r.priority || 'No priority'}"></span>
+      <span class="card-due ${dc}">${r.dueDate ? formatDate(r.dueDate) : 'No due date'}</span>
+      ${noteCount > 0 ? `<span class="card-note-indicator" title="${noteCount} note(s)">💬 ${noteCount}</span>` : ''}
+      ${r.preparer ? `<span class="card-initials" title="${r.preparer}">${initials(r.preparer)}</span>` : ''}
+    </div>
+  `;
+  return card;
+}
+
+// ─── RENDER: LIST ────────────────────────────────────────────────────────────
+
+function renderList(data) {
+  const sorted = [...data].sort((a, b) => {
+    let av = a[listSortKey] || '', bv = b[listSortKey] || '';
+    return av < bv ? -listSortDir : av > bv ? listSortDir : 0;
+  });
+  const body = document.getElementById('listBody');
+  body.innerHTML = '';
+  sorted.forEach(r => {
+    const stage = stageById(r.stage);
+    const dc = dueClass(r.dueDate);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><strong>${r.client}</strong></td>
+      <td><span class="card-type-badge ${TYPE_COLORS[r.type] || ''}" style="font-size:11px;padding:2px 7px;border-radius:4px;">${r.type}</span></td>
+      <td>${r.year}</td>
+      <td><span class="status-pill" style="background:${stage.color}22;color:${stage.color};border:1px solid ${stage.color}44">
+        <span style="width:6px;height:6px;border-radius:50%;background:${stage.color};display:inline-block"></span>
+        ${stage.label}
+      </span></td>
+      <td>${r.preparer || `<span style="color:var(--text-dim)">—</span>`}</td>
+      <td><span class="priority-dot ${PRIORITY_COLORS[r.priority || '']}" style="display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px"></span>${r.priority || '—'}</td>
+      <td class="card-due ${dc}">${r.dueDate ? formatDate(r.dueDate) : '—'}</td>
+      <td>${r.extension ? '<span class="extension-tag">EXT</span>' : '—'}</td>
+    `;
+    tr.onclick = () => openDetail(r.id);
+    body.appendChild(tr);
+  });
+}
+
+function sortList(key) {
+  if (listSortKey === key) listSortDir *= -1;
+  else { listSortKey = key; listSortDir = 1; }
+  applyFilters();
+}
+
+// ─── VIEW TOGGLE ─────────────────────────────────────────────────────────────
+
+function setView(v) {
+  currentView = v;
+  document.getElementById('boardWrap').style.display = v === 'kanban' ? '' : 'none';
+  document.getElementById('listWrap').classList.toggle('active', v === 'list');
+  document.getElementById('kanbanBtn').classList.toggle('active', v === 'kanban');
+  document.getElementById('listBtn').classList.toggle('active', v === 'list');
+  applyFilters();
+}
+
+// ─── ADD / EDIT MODAL ────────────────────────────────────────────────────────
+
+function openAddModal(preStage) {
+  editingId = null;
+  document.getElementById('modalTitle').textContent = 'Add Tax Return';
+  document.getElementById('deleteBtn').style.display = 'none';
+  clearForm();
+  if (preStage) document.getElementById('f-stage').value = preStage;
+  document.getElementById('addModal').classList.add('open');
+}
+
+function openEditModal(id) {
+  const r = returns.find(r => r.id === id);
+  if (!r) return;
+  editingId = id;
+  document.getElementById('modalTitle').textContent = 'Edit Return';
+  document.getElementById('deleteBtn').style.display = '';
+  document.getElementById('f-client').value = r.client;
+  document.getElementById('f-type').value = r.type;
+  document.getElementById('f-year').value = r.year;
+  document.getElementById('f-preparer').value = r.preparer || '';
+  document.getElementById('f-reviewer').value = r.reviewer || '';
+  document.getElementById('f-stage').value = r.stage;
+  document.getElementById('f-priority').value = r.priority || '';
+  document.getElementById('f-exstatus').value = r.exStatus || '';
+  document.getElementById('f-due').value = r.dueDate || '';
+  document.getElementById('f-ext').value = String(r.extension || false);
+  document.getElementById('f-ein').value = r.ein || '';
+  document.getElementById('f-state').value = r.state || '';
+  document.getElementById('f-notes').value = '';
+  document.getElementById('addModal').classList.add('open');
+}
+
+function clearForm() {
+  ['f-client','f-preparer','f-reviewer','f-due','f-ein','f-state','f-notes'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('f-type').value = '1040';
+  document.getElementById('f-year').value = '2025';
+  document.getElementById('f-stage').value = 'intake';
+  document.getElementById('f-exstatus').value = '';
+  document.getElementById('f-priority').value = '';
+  document.getElementById('f-ext').value = 'false';
+}
+
+function closeAddModal() {
+  document.getElementById('addModal').classList.remove('open');
+  editingId = null;
+}
+
+function saveReturn() {
+  const client = document.getElementById('f-client').value.trim();
+  if (!client) { alert('Client name is required.'); return; }
+
+  if (editingId) {
+    const r = returns.find(r => r.id === editingId);
+    const prevStage = r.stage;
+    const newStage = document.getElementById('f-stage').value;
+    r.client = client;
+    r.type = document.getElementById('f-type').value;
+    r.year = document.getElementById('f-year').value;
+    r.preparer = document.getElementById('f-preparer').value.trim();
+    r.reviewer = document.getElementById('f-reviewer').value.trim();
+    r.priority = document.getElementById('f-priority').value;
+    const newExStatus = document.getElementById('f-exstatus').value;
+    if ((r.exStatus || '') !== newExStatus) {
+      const prev = exStatusById(r.exStatus || '').label;
+      const next = exStatusById(newExStatus).label;
+      r.notes.push({ text: `Exception status: ${prev} → ${next}`, author: 'System', ts: Date.now() });
+    }
+    r.exStatus = newExStatus;
+    r.stage = newStage;
+    r.dueDate = document.getElementById('f-due').value;
+    r.extension = document.getElementById('f-ext').value === 'true';
+    r.ein = document.getElementById('f-ein').value.trim();
+    r.state = document.getElementById('f-state').value.trim().toUpperCase();
+    const noteText = document.getElementById('f-notes').value.trim();
+    if (noteText) r.notes.push({ text: noteText, author: 'User', ts: Date.now() });
+    if (prevStage !== newStage) {
+      r.notes.push({ text: `Status changed: ${stageById(prevStage).label} → ${stageById(newStage).label}`, author: 'System', ts: Date.now() });
+    }
+    toast('Return updated');
+  } else {
+    const newReturn = {
+      id: uid(),
+      client,
+      type: document.getElementById('f-type').value,
+      year: document.getElementById('f-year').value,
+      preparer: document.getElementById('f-preparer').value.trim(),
+      reviewer: document.getElementById('f-reviewer').value.trim(),
+      priority: document.getElementById('f-priority').value,
+      exStatus: document.getElementById('f-exstatus').value,
+      stage: document.getElementById('f-stage').value,
+      dueDate: document.getElementById('f-due').value,
+      extension: document.getElementById('f-ext').value === 'true',
+      ein: document.getElementById('f-ein').value.trim(),
+      state: document.getElementById('f-state').value.trim().toUpperCase(),
+      notes: [],
+      created: Date.now()
+    };
+    const noteText = document.getElementById('f-notes').value.trim();
+    if (noteText) newReturn.notes.push({ text: noteText, author: 'User', ts: Date.now() });
+    newReturn.notes.push({ text: 'Return added to pipeline', author: 'System', ts: Date.now() });
+    returns.push(newReturn);
+    toast('Return added');
+  }
+
+  saveData();
+  closeAddModal();
+  applyFilters();
+}
+
+function deleteCurrentReturn() {
+  if (!editingId) return;
+  const r = returns.find(r => r.id === editingId);
+  if (!confirm(`Delete "${r.client}"? This cannot be undone.`)) return;
+  returns = returns.filter(r => r.id !== editingId);
+  saveData();
+  closeAddModal();
+  applyFilters();
+  toast('Return deleted');
+}
+
+// ─── DETAIL MODAL ────────────────────────────────────────────────────────────
+
+function openDetail(id) {
+  const r = returns.find(r => r.id === id);
+  if (!r) return;
+  detailId = id;
+  const stage = stageById(r.stage);
+
+  document.getElementById('detailTitle').textContent = r.client;
+
+  // Stage progress bar
+  const bar = document.getElementById('detailStatusBar');
+  const curIdx = STAGES.findIndex(s => s.id === r.stage);
+  bar.innerHTML = STAGES.map((s, i) => {
+    let cls = 'stage-step-btn';
+    let style = '';
+    if (i < curIdx) { cls += ' passed'; style = `background:${s.color}22;color:${s.color};border-color:${s.color}44`; }
+    else if (i === curIdx) { cls += ' current'; style = `background:${s.color};border-color:${s.color}`; }
+    const arrow = i < STAGES.length - 1 ? `<span class="stage-arrow">›</span>` : '';
+    return `<div class="stage-step">
+      <button class="${cls}" style="${style}" onclick="moveToStage('${s.id}')">${s.label}</button>
+      ${arrow}
+    </div>`;
+  }).join('');
+
+  // Detail grid
+  const dc = dueClass(r.dueDate);
+  document.getElementById('detailGrid').innerHTML = `
+    <div class="detail-field"><label>Return Type</label><div class="val"><span class="card-type-badge ${TYPE_COLORS[r.type] || ''}">${r.type}</span></div></div>
+    <div class="detail-field"><label>Tax Year</label><div class="val">${r.year}</div></div>
+    <div class="detail-field"><label>Preparer</label><div class="val">${r.preparer || '—'}</div></div>
+    <div class="detail-field"><label>Reviewer</label><div class="val">${r.reviewer || '—'}</div></div>
+    <div class="detail-field"><label>Due Date</label><div class="val card-due ${dc}">${r.dueDate ? formatDate(r.dueDate) : '—'}</div></div>
+    <div class="detail-field"><label>Extension</label><div class="val">${r.extension ? '<span class="extension-tag">Filed</span>' : 'No'}</div></div>
+    <div class="detail-field"><label>Priority</label><div class="val"><span class="priority-dot ${PRIORITY_COLORS[r.priority || '']}" style="display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px"></span>${r.priority || 'None'}</div></div>
+    <div class="detail-field"><label>Exception Status</label><div class="val">${r.exStatus ? `<span class="ex-status-tag" style="background:${exStatusById(r.exStatus).bg};color:${exStatusById(r.exStatus).color};width:auto;margin-top:0">${exStatusById(r.exStatus).label}</span>` : '<span style="color:var(--green)">Active</span>'}</div></div>
+    <div class="detail-field"><label>State</label><div class="val">${r.state || '—'}</div></div>
+    ${r.ein ? `<div class="detail-field"><label>EIN/SSN (last 4)</label><div class="val">••••${r.ein}</div></div>` : ''}
+  `;
+
+  renderNotes(r);
+  document.getElementById('noteInput').value = '';
+  document.getElementById('detailModal').classList.add('open');
+}
+
+function renderNotes(r) {
+  const list = document.getElementById('noteList');
+  const notes = [...r.notes].reverse();
+  if (notes.length === 0) {
+    list.innerHTML = '<div style="font-size:12px;color:var(--text-dim);padding:4px 0">No activity yet.</div>';
+    return;
+  }
+  list.innerHTML = notes.map(n => {
+    const d = new Date(n.ts);
+    const fmt = d.toLocaleDateString('en-US', { month:'short', day:'numeric', hour:'numeric', minute:'2-digit' });
+    const isSystem = n.author === 'System';
+    return `<div class="note-item" style="${isSystem ? 'border-color:var(--accent-dim);background:var(--accent-dim)' : ''}">
+      <div class="note-meta">${isSystem ? '⚙' : '●'} ${n.author} · ${fmt}</div>
+      ${n.text}
+    </div>`;
+  }).join('');
+}
+
+function addNote() {
+  const text = document.getElementById('noteInput').value.trim();
+  if (!text) return;
+  const r = returns.find(r => r.id === detailId);
+  if (!r) return;
+  r.notes.push({ text, author: 'User', ts: Date.now() });
+  saveData();
+  renderNotes(r);
+  document.getElementById('noteInput').value = '';
+  applyFilters();
+  toast('Note added');
+}
+
+function moveToStage(stageId) {
+  const r = returns.find(r => r.id === detailId);
+  if (!r || r.stage === stageId) return;
+  const prevStage = r.stage;
+  r.stage = stageId;
+  r.notes.push({ text: `Status changed: ${stageById(prevStage).label} → ${stageById(stageId).label}`, author: 'System', ts: Date.now() });
+  saveData();
+  openDetail(detailId); // re-render
+  applyFilters();
+  toast(`Moved to "${stageById(stageId).label}"`);
+}
+
+function closeDetailModal() {
+  document.getElementById('detailModal').classList.remove('open');
+  detailId = null;
+}
+
+function openEditFromDetail() {
+  closeDetailModal();
+  openEditModal(detailId || returns[0]?.id);
+}
+
+// ─── EXPORT ──────────────────────────────────────────────────────────────────
+
+function exportCSV() {
+  const headers = ['Client','Type','Year','Stage','Exception Status','Preparer','Reviewer','Priority','Due Date','Extension','State'];
+  const rows = returns.map(r => [
+    `"${r.client}"`, r.type, r.year, stageById(r.stage).label,
+    exStatusById(r.exStatus || '').label,
+    r.preparer, r.reviewer, r.priority, r.dueDate,
+    r.extension ? 'Yes' : 'No', r.state
+  ]);
+  const csv = [headers, ...rows].map(r => r.join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+  a.download = `track-pipeline-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  toast('CSV exported');
+}
+
+// ─── TOAST ───────────────────────────────────────────────────────────────────
+
+function toast(msg, type = 'success') {
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>${msg}`;
+  document.getElementById('toastContainer').appendChild(el);
+  setTimeout(() => el.remove(), 3000);
+}
+
+// ─── KEYBOARD ────────────────────────────────────────────────────────────────
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeDetailModal();
+    closeAddModal();
+  }
+  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+    e.preventDefault();
+    document.getElementById('searchInput').focus();
+  }
+});
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+
+applyFilters();
+</script>
+</body>
+</html>
